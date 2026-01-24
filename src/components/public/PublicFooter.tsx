@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
+import type { JSX } from "react";
 
-export function PublicFooter(): JSX.Element {
+export default function PublicFooter(): JSX.Element {
   return (
     <Box
       component="footer"
@@ -15,7 +16,7 @@ export function PublicFooter(): JSX.Element {
         borderColor: "divider",
         display: "flex",
         alignItems: "center",
-        px: 2, /* sin espacio externo; solo padding interno controlado */
+        px: 2,
         zIndex: (theme) => theme.zIndex.appBar - 1,
       }}
     >
@@ -24,8 +25,9 @@ export function PublicFooter(): JSX.Element {
         color="text.secondary"
         sx={{ width: "100%", textAlign: "center" }}
       >
-        © {new Date().getFullYear()} — Blog App
+        © 2025 BlogApp | Todos los derechos reservados
       </Typography>
     </Box>
   );
 }
+

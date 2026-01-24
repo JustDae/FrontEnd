@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import type { JSX } from "react";
 
 type Props = {
   open: boolean;

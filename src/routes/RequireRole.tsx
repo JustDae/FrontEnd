@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import type { JSX } from "react/jsx-runtime";
 
 type Props = {
   allow: string[];

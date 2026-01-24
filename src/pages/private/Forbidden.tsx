@@ -1,5 +1,6 @@
 import { Alert, Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import type { JSX } from "react/jsx-runtime";
 
 export default function Forbidden(): JSX.Element {
   const navigate = useNavigate();

@@ -13,9 +13,10 @@ import {
   Stack,
   TextField,
   Typography,
+  Chip
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getPublicPosts, type PublicPostDto } from "../../services/posts.service";
+import { getPublicProducts, getProductImageUrl, type ProductoDto } from "../../services/productos.service";
 import { HomeCarousel } from "../../components/public/HomeCarousel";
 
 function useDebouncedValue<T>(value: T, delayMs: number): T {
@@ -33,14 +34,14 @@ export default function PublicHome(): JSX.Element {
 
   const qParam = sp.get("q") || "";
   const pageParam = Number(sp.get("page") || "1");
-  const limitParam = Number(sp.get("limit") || "10");
+  const limitParam = Number(sp.get("limit") || "9");
 
   const [q, setQ] = useState(qParam);
   const debouncedQ = useDebouncedValue(q, 450);
 
-  const [items, setItems] = useState<PublicPostDto[]>([]);
+  const [items, setItems] = useState<ProductoDto[]>([]);
   const [page, setPage] = useState(Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1);
-  const [limit] = useState(Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 10);
+  const [limit] = useState(Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 9);
 
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -66,11 +67,19 @@ export default function PublicHome(): JSX.Element {
       try {
         setLoading(true);
         setError(null);
-        const res: any = await getPublicPosts(queryKey);
-        setItems(res.data.items);
-        setTotalPages(res.totalPages || 1);
-      } catch {
-        setError("No se pudieron cargar los posts.");
+
+        const res = await getPublicProducts(queryKey);
+
+        if (res.data) {
+          setItems(res.data.items);
+          setTotalPages(res.data.meta.totalPages);
+        } else {
+            setItems([]);
+        }
+
+      } catch (err) {
+        console.error(err);
+        setError("No se pudo cargar el menú. Revisa la conexión con el servidor.");
       } finally {
         setLoading(false);
       }
@@ -82,15 +91,13 @@ export default function PublicHome(): JSX.Element {
   }, [debouncedQ]);
 
   if (loading && items.length === 0) return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
-      <CircularProgress />
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+      <CircularProgress sx={{ color: brandColor }} />
     </Box>
   );
 
-  if (error) return <Alert severity="error">{error}</Alert>;
-
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#ffffff', pb: 8 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f8f9fa', pb: 8 }}>
 
       <Container maxWidth="xl" sx={{ mt: 2, mb: 6 }}>
         <HomeCarousel />
@@ -98,83 +105,111 @@ export default function PublicHome(): JSX.Element {
 
       <Container maxWidth="lg">
         <Box sx={{ mb: 6, textAlign: 'center' }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, color: '#222', mb: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 800, color: '#222', mb: 1 }}>
             Nuestro Menú
           </Typography>
-          <Box sx={{ width: '50px', height: '4px', bgcolor: brandColor, mx: 'auto', mb: 4 }} />
+          <Box sx={{ width: '60px', height: '4px', bgcolor: brandColor, mx: 'auto', mb: 4, borderRadius: 2 }} />
 
           <TextField
             label="¿Qué se te antoja hoy?"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             fullWidth
-            sx={{ maxWidth: 600 }}
+            sx={{ maxWidth: 500, bgcolor: 'white' }}
           />
         </Box>
 
-        {items.length === 0 ? (
-          <Alert severity="info" sx={{ mt: 2 }}>No hay resultados para tu búsqueda.</Alert>
+        {error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : items.length === 0 ? (
+          <Alert severity="info" sx={{ mt: 2 }}>No encontramos platillos activos.</Alert>
         ) : (
-          <>
-            <Grid container spacing={3}>
-              {items.map((p) => (
-                <Grid item key={p.id} xs={12} sm={6} md={4}>
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      borderRadius: '12px',
-                      boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
-                      border: '1px solid #eee',
-                      transition: 'transform 0.2s ease-in-out',
-                      '&:hover': {
-                        transform: 'translateY(-5px)',
-                        boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
-                      }
-                    }}
-                  >
+          <Grid container spacing={4}>
+            {items.map((p) => (
+              <Grid item key={p.id} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: '16px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                    transition: 'all 0.3s ease',
+                    overflow: 'hidden',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: '0 12px 30px rgba(0,0,0,0.12)'
+                    }
+                  }}
+                >
+                  <Box sx={{ position: 'relative', overflow: 'hidden', height: 220 }}>
                     <CardMedia
                       component="img"
-                      height="200"
-                      image={ (p as any).image || "/images/plato1.png" }
-                      alt={p.title}
+                      height="100%"
+                      // Usamos el helper para la URL completa
+                      image={getProductImageUrl(p.imagen)}
+                      alt={p.nombre}
+                      sx={{ objectFit: 'cover' }}
                     />
+                    <Box sx={{
+                      position: 'absolute',
+                      bottom: 10,
+                      right: 10,
+                      bgcolor: 'white',
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: '8px',
+                      fontWeight: 'bold',
+                      color: brandColor,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                    }}>
+                      ${Number(p.precio).toFixed(2)}
+                    </Box>
+                  </Box>
 
-                    <CardContent sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                        {p.category?.name || p.createdAt?.toString().split('T')[0]}
-                      </Typography>
+                  <CardContent sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
+                    <Stack direction="row" spacing={1} mb={1}>
+                       {p.category && (
+                         <Chip
+                            label={p.category.name}
+                            size="small"
+                            sx={{ bgcolor: '#fff0ee', color: brandColor, fontWeight: 600 }}
+                         />
+                       )}
+                    </Stack>
 
-                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                        {p.title}
-                      </Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, lineHeight: 1.2 }}>
+                      {p.nombre}
+                    </Typography>
 
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 3, flexGrow: 1 }}>
-                        {p.excerpt || "Sin descripción disponible."}
-                      </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, flexGrow: 1 }}>
+                      {p.descripcion || "Una delicia preparada al momento."}
+                    </Typography>
 
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        onClick={() => navigate(`/posts/${p.id}`)}
-                        sx={{
-                          bgcolor: brandColor,
-                          borderRadius: '6px',
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          boxShadow: 'none',
-                          '&:hover': { bgcolor: '#d44336' }
-                        }}
-                      >
-                        Ver Detalle
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => navigate(`/product/${p.id}`)}
+                      sx={{
+                        bgcolor: brandColor,
+                        borderRadius: '8px',
+                        textTransform: 'none',
+                        fontWeight: 700,
+                        py: 1,
+                        boxShadow: 'none',
+                        '&:hover': { bgcolor: '#d44336' }
+                      }}
+                    >
+                      Ordenar
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
+        {totalPages > 1 && (
             <Stack direction="row" justifyContent="center" sx={{ py: 6 }}>
               <Pagination
                 count={totalPages}
@@ -184,7 +219,6 @@ export default function PublicHome(): JSX.Element {
                 size="large"
               />
             </Stack>
-          </>
         )}
       </Container>
     </Box>

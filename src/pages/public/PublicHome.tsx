@@ -1,0 +1,192 @@
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  CircularProgress,
+  Container,
+  Grid,
+  Pagination,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getPublicPosts, type PublicPostDto } from "../../services/posts.service";
+import { HomeCarousel } from "../../components/public/HomeCarousel";
+
+function useDebouncedValue<T>(value: T, delayMs: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delayMs);
+    return () => clearTimeout(t);
+  }, [value, delayMs]);
+  return debounced;
+}
+
+export default function PublicHome(): JSX.Element {
+  const [sp, setSp] = useSearchParams();
+  const navigate = useNavigate();
+
+  const qParam = sp.get("q") || "";
+  const pageParam = Number(sp.get("page") || "1");
+  const limitParam = Number(sp.get("limit") || "10");
+
+  const [q, setQ] = useState(qParam);
+  const debouncedQ = useDebouncedValue(q, 450);
+
+  const [items, setItems] = useState<PublicPostDto[]>([]);
+  const [page, setPage] = useState(Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1);
+  const [limit] = useState(Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 10);
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const brandColor = '#F55345';
+
+  const queryKey = useMemo(() => ({ q: debouncedQ, page, limit }), [debouncedQ, page, limit]);
+
+  useEffect(() => {
+    setSp((prev) => {
+      const next = new URLSearchParams(prev);
+      if (q) next.set("q", q);
+      else next.delete("q");
+      next.set("page", String(page));
+      next.set("limit", String(limit));
+      return next;
+    });
+  }, [q, page, limit, setSp]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res: any = await getPublicPosts(queryKey);
+        setItems(res.data.items);
+        setTotalPages(res.totalPages || 1);
+      } catch {
+        setError("No se pudieron cargar los posts.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [queryKey]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQ]);
+
+  if (loading && items.length === 0) return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5 }}>
+      <CircularProgress />
+    </Box>
+  );
+
+  if (error) return <Alert severity="error">{error}</Alert>;
+
+  return (
+    <Box sx={{ minHeight: '100vh', bgcolor: '#ffffff', pb: 8 }}>
+
+      <Container maxWidth="xl" sx={{ mt: 2, mb: 6 }}>
+        <HomeCarousel />
+      </Container>
+
+      <Container maxWidth="lg">
+        <Box sx={{ mb: 6, textAlign: 'center' }}>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: '#222', mb: 1 }}>
+            Nuestro Menú
+          </Typography>
+          <Box sx={{ width: '50px', height: '4px', bgcolor: brandColor, mx: 'auto', mb: 4 }} />
+
+          <TextField
+            label="¿Qué se te antoja hoy?"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            fullWidth
+            sx={{ maxWidth: 600 }}
+          />
+        </Box>
+
+        {items.length === 0 ? (
+          <Alert severity="info" sx={{ mt: 2 }}>No hay resultados para tu búsqueda.</Alert>
+        ) : (
+          <>
+            <Grid container spacing={3}>
+              {items.map((p) => (
+                <Grid item key={p.id} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      borderRadius: '12px',
+                      boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
+                      border: '1px solid #eee',
+                      transition: 'transform 0.2s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateY(-5px)',
+                        boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+                      }
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={ (p as any).image || "/images/plato1.png" }
+                      alt={p.title}
+                    />
+
+                    <CardContent sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                        {p.category?.name || p.createdAt?.toString().split('T')[0]}
+                      </Typography>
+
+                      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                        {p.title}
+                      </Typography>
+
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 3, flexGrow: 1 }}>
+                        {p.excerpt || "Sin descripción disponible."}
+                      </Typography>
+
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={() => navigate(`/posts/${p.id}`)}
+                        sx={{
+                          bgcolor: brandColor,
+                          borderRadius: '6px',
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          boxShadow: 'none',
+                          '&:hover': { bgcolor: '#d44336' }
+                        }}
+                      >
+                        Ver Detalle
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Stack direction="row" justifyContent="center" sx={{ py: 6 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={(_, value) => setPage(value)}
+                color="primary"
+                size="large"
+              />
+            </Stack>
+          </>
+        )}
+      </Container>
+    </Box>
+  );
+}

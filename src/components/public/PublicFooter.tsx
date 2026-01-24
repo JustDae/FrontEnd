@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import type { JSX } from "react";
 
-export function PublicFooter(): JSX.Element {
+export default function PublicFooter(): JSX.Element {
   return (
     <Box
       component="footer"
@@ -26,8 +26,9 @@ export function PublicFooter(): JSX.Element {
         color="text.secondary"
         sx={{ width: "100%", textAlign: "center" }}
       >
-        © {new Date().getFullYear()} — Restaurante
+        © {new Date().getFullYear()} Restaurante - Todos los Derechos Reservados
       </Typography>
     </Box>
   );
 }
+

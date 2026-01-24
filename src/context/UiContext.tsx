@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from "@mui/material";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState, type JSX } from "react";
 
 type UiState = {
   open: boolean;

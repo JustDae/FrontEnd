@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, type JSX } from "react";
 import { useAuth } from "../context/AuthContext";
 
 import MenuIcon from "@mui/icons-material/Menu";

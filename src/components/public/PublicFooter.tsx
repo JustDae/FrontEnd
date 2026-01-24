@@ -17,6 +17,7 @@ export default function PublicFooter(): JSX.Element {
         display: "flex",
         alignItems: "center",
         px: 2,
+        backgroundColor: '#FAE6E1',
         zIndex: (theme) => theme.zIndex.appBar - 1,
       }}
     >
@@ -25,7 +26,7 @@ export default function PublicFooter(): JSX.Element {
         color="text.secondary"
         sx={{ width: "100%", textAlign: "center" }}
       >
-        © 2025 BlogApp | Todos los derechos reservados
+        © {new Date().getFullYear()} Restaurante - Todos los Derechos Reservados
       </Typography>
     </Box>
   );

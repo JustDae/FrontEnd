@@ -6,14 +6,23 @@ import type { JSX } from "react/jsx-runtime";
 
 export default function PublicLayout(): JSX.Element {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary" }}>
+    <Box 
+      sx={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        minHeight: "100vh", 
+        bgcolor: "#f9f9f9" 
+      }}
+    >
       <PublicHeader />
 
       <Toolbar />
 
-      <Container sx={{ py: 3 }}>
-        <Outlet />
-      </Container>
+      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
+        <Container maxWidth="lg">
+          <Outlet />
+        </Container>
+      </Box>
 
       <PublicFooter />
     </Box>

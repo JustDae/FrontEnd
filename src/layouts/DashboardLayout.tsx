@@ -1,4 +1,3 @@
-// layouts/DashboardLayout.tsx
 import {
   Box,
   Drawer,
@@ -24,6 +23,7 @@ interface MenuItemType {
 const menuItems: MenuItemType[] = [
   { text: "Posts", path: "/dashboard/posts" },
   { text: "Categorías", path: "/dashboard/categories" },
+  { text: "Detalle Pedido", path: "/dashboard/detalle-pedido" },
   { text: "Usuarios", path: "/dashboard/users" },
 ];
 
@@ -48,13 +48,22 @@ export default function DashboardLayout(): JSX.Element {
     <Box display="flex">
       <Drawer
         variant="permanent"
-        sx={{ width: 200, [`& .MuiDrawer-paper`]: { width: 200 } }}
+        sx={{ width: 220, [`& .MuiDrawer-paper`]: { width: 220, borderRight: "1px solid #eee" } }}
       >
-        <Toolbar />
+        <Toolbar>
+           <Typography variant="h6" sx={{ fontWeight: "bold", color: "#F55345" }}>
+            Panel
+          </Typography>
+        </Toolbar>
         <List>
           {menuItems.map((item) => (
             <ListItem disablePadding key={item.text}>
-              <ListItemButton onClick={() => navigate(item.path)}>
+              <ListItemButton 
+                onClick={() => navigate(item.path)}
+                sx={{
+                  "&:hover": { bgcolor: "rgba(245, 83, 69, 0.08)" }
+                }}
+              >
                 <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
@@ -62,16 +71,10 @@ export default function DashboardLayout(): JSX.Element {
         </List>
       </Drawer>
       <Box flexGrow={1}>
-        <AppBar position="static" sx={{ bgcolor: "#222" }}>
+        <AppBar position="static" sx={{ bgcolor: "#F55345", elevation: 0 }}>
           <Toolbar sx={{ justifyContent: "space-between" }}>
-            <Typography variant="h6">
-              <img
-                src="https://static.vecteezy.com/system/resources/thumbnails/022/791/223/small/blog-site-blogger-png.png"
-                alt="logo"
-                width="32"
-                style={{ verticalAlign: "middle", marginRight: 8 }}
-              />
-              BlogApp Admin
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Restaurante Admin
             </Typography>
 
             <Box
@@ -81,8 +84,11 @@ export default function DashboardLayout(): JSX.Element {
               onClick={handleUserClick}
               sx={{ cursor: "pointer" }}
             >
-              <Avatar src="/user.png" />
-              <Typography>Admin User</Typography>
+              <Box sx={{ textAlign: "right", mr: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: "bold" }}>Dae</Typography>
+                <Typography variant="caption" sx={{ opacity: 0.8 }}>Rol: Admin</Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "white", color: "#F55345" }}>D</Avatar>
             </Box>
 
             <Menu
@@ -95,7 +101,7 @@ export default function DashboardLayout(): JSX.Element {
           </Toolbar>
         </AppBar>
 
-        <Box p={3}>
+        <Box p={3} sx={{ bgcolor: "#f9f9f9", minHeight: "calc(100vh - 64px)" }}>
           <Outlet />
         </Box>
       </Box>

@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Search, Edit, Delete } from "@mui/icons-material";
 import axios from "axios";
-import PostFormDialog from "../../components/PostFormDialog";
+import PostFormDialog from "../../components/posts/PostFormDialog.tsx";
 
 interface Post {
   id: string;

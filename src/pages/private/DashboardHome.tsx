@@ -67,7 +67,7 @@ export default function DashboardHome(): JSX.Element {
 
       <Grid container spacing={3}>
         {cards.map((card, index) => (
-          <Grid xs={12} sm={4} key={index}>
+          <Grid key={index} size={{ xs: 12, sm: 4 }}>
             <Paper 
               elevation={0}
               sx={{ 

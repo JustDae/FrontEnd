@@ -131,7 +131,7 @@ export default function PublicHome(): JSX.Element {
           <>
             <Grid container spacing={3}>
               {items.map((p) => (
-                <Grid key={p.id} xs={12} sm={6} md={4}>
+                <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4 }}>
                   <Card
                     sx={{
                       height: '100%',

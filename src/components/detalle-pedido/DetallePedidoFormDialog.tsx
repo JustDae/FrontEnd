@@ -78,11 +78,13 @@ export default function DetallePedidoFormDialog({
               value={pedidoId}
               onChange={(e) => setPedidoId(e.target.value)}
             >
-              {pedidos.map((p) => (
+              {Array.isArray(pedidos) ? pedidos.map((p) => (
                 <MenuItem key={p.id} value={p.id}>
                   Pedido #{p.id} - {p.nombre_cliente}
                 </MenuItem>
-              ))}
+              )) : (
+                <MenuItem disabled>Error al cargar pedidos</MenuItem>
+              )}
             </Select>
           </FormControl>
 
@@ -93,11 +95,13 @@ export default function DetallePedidoFormDialog({
               value={productoId}
               onChange={(e) => setProductoId(e.target.value)}
             >
-              {productos.map((prod) => (
+              {Array.isArray(productos) ? productos.map((prod) => (
                 <MenuItem key={prod.id} value={prod.id}>
                   {prod.nombre} (${prod.precio})
                 </MenuItem>
-              ))}
+              )) : (
+                <MenuItem disabled>Error al cargar productos</MenuItem>
+              )}
             </Select>
           </FormControl>
 
@@ -142,4 +146,4 @@ export default function DetallePedidoFormDialog({
       </DialogActions>
     </Dialog>
   );
-}
+}   

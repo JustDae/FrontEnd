@@ -17,7 +17,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useState, type JSX } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -25,12 +26,16 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { 
   type DetallePedido, 
   getDetallePedidos, 
-  deleteDetallePedido 
+  deleteDetallePedido,
+  createDetallePedido,
+  updateDetallePedido 
 } from "../../services/detalle-pedido.service";
+import DetallePedidoFormDialog from "../../components/detalle-pedido/DetallePedidoFormDialog";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import { getApiErrorMessage } from "../../utils/getApiErrorMessage.ts";
 import { useUi } from "../../context/UiContext.tsx";
-import { useNavigate } from "react-router-dom";
+import { useProductosOptions } from "../../hooks/useProductosOptions";
+import { usePedidosOptions } from "../../hooks/usePedidosOptions";
 
 function useDebouncedValue<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -51,7 +56,6 @@ export default function DetallePedidoPage(): JSX.Element {
 
   const [page, setPage] = useState(Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1);
   const [limit] = useState(10);
-
   const [search, setSearch] = useState(searchParam);
   const debouncedSearch = useDebouncedValue(search, 450);
 
@@ -60,17 +64,20 @@ export default function DetallePedidoPage(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { options: productos } = useProductosOptions();
+  const { options: pedidos } = usePedidosOptions();
+
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<"create" | "edit">("create");
+  const [current, setCurrent] = useState<DetallePedido | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState<DetallePedido | null>(null);
 
-  const queryKey = useMemo(
-    () => ({
-      page,
-      limit,
-      search: debouncedSearch.trim() || undefined,
-    }),
-    [page, limit, debouncedSearch]
-  );
+  const queryKey = useMemo(() => ({
+    page,
+    limit,
+    search: debouncedSearch.trim() || undefined,
+  }), [page, limit, debouncedSearch]);
 
   useEffect(() => {
     setSp((prev) => {
@@ -91,8 +98,8 @@ export default function DetallePedidoPage(): JSX.Element {
       setLoading(true);
       setError(null);
       const res = await getDetallePedidos(queryKey);
-      setItems(res.items);
-      setTotalPages(res.meta.totalPages || 1);
+      setItems(Array.isArray(res?.items) ? res.items : []);
+      setTotalPages(res?.meta?.totalPages || 1);
     } catch {
       setError("No se pudieron cargar los detalles de pedidos.");
     } finally {
@@ -103,6 +110,35 @@ export default function DetallePedidoPage(): JSX.Element {
   useEffect(() => {
     load();
   }, [queryKey]);
+
+  const onCreate = () => {
+    setMode("create");
+    setCurrent(null);
+    setOpen(true);
+  };
+
+  const onEdit = (item: DetallePedido) => {
+    setMode("edit");
+    setCurrent(item);
+    setOpen(true);
+  };
+
+  const onSubmit = async (payload: any) => {
+    try {
+      if (mode === "create") {
+        await createDetallePedido(payload);
+        notify({ message: "Detalle creado con éxito", severity: "success" });
+        setPage(1);
+      } else if (current) {
+        await updateDetallePedido(current.id, payload);
+        notify({ message: "Detalle actualizado con éxito", severity: "success" });
+      }
+      setOpen(false);
+      await load();
+    } catch (e) {
+      notify({ message: getApiErrorMessage(e), severity: "error" });
+    }
+  };
 
   const askDelete = (item: DetallePedido) => {
     setToDelete(item);
@@ -125,40 +161,41 @@ export default function DetallePedidoPage(): JSX.Element {
   return (
     <Stack spacing={2} sx={{ p: 3 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4">Detalles de Pedidos</Typography>
+        <Typography variant="h4" sx={{ fontWeight: "bold" }}>Detalles de Pedidos</Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate("/dashboard/pedidos/nuevo")}
+          onClick={onCreate}
+          sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" } }}
         >
-          Nuevo Pedido
+          Nuevo Detalle
         </Button>
       </Stack>
 
       {error && <Alert severity="error" onClose={() => setError(null)}>{error}</Alert>}
 
       <TextField
-        label="Buscar por cliente..."
+        label="Buscar por cliente o plato..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         fullWidth
       />
 
       {loading ? (
-        <Stack alignItems="center"><CircularProgress /></Stack>
+        <Stack alignItems="center"><CircularProgress sx={{ color: "#F55345" }} /></Stack>
       ) : items.length === 0 ? (
         <Alert severity="info">No hay detalles de pedidos para mostrar.</Alert>
       ) : (
         <>
           <TableContainer component={Paper} variant="outlined">
             <Table>
-              <TableHead>
+              <TableHead sx={{ bgcolor: "#f5f5f5" }}>
                 <TableRow>
-                  <TableCell>ID Pedido</TableCell>
-                  <TableCell>Producto</TableCell>
-                  <TableCell>Cantidad</TableCell>
-                  <TableCell>Subtotal</TableCell>
-                  <TableCell align="right">Acciones</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>ID Pedido</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Producto</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Cantidad</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Subtotal</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: "bold" }}>Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -176,13 +213,13 @@ export default function DetallePedidoPage(): JSX.Element {
                       />
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton 
-                        onClick={() => navigate(`/order-detail/${item.id}`)} 
-                        color="primary"
-                      >
+                      <IconButton onClick={() => navigate(`/order-detail/${item.id}`)} color="inherit">
                         <VisibilityIcon />
                       </IconButton>
-                      <IconButton onClick={() => askDelete(item)} aria-label="eliminar">
+                      <IconButton onClick={() => onEdit(item)} color="primary">
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => askDelete(item)} color="error">
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -202,6 +239,16 @@ export default function DetallePedidoPage(): JSX.Element {
           </Stack>
         </>
       )}
+
+      <DetallePedidoFormDialog
+        open={open}
+        mode={mode}
+        initial={current}
+        productos={productos}
+        pedidos={pedidos}
+        onClose={() => setOpen(false)}
+        onSubmit={onSubmit}
+      />
 
       <ConfirmDialog
         open={confirmOpen}

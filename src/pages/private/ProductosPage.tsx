@@ -7,6 +7,7 @@ import { Search, Edit, Delete, Fastfood } from "@mui/icons-material";
 import api from "../../services/api";
 import { useUi } from "../../context/UiContext";
 import ProductoFormDialog from "../../components/productos/ProductoFormDialog";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 
 interface Producto {
   id: number;
@@ -22,6 +23,9 @@ export default function ProductosPage(): JSX.Element {
   const [filtro, setFiltro] = useState("");
   const [open, setOpen] = useState(false);
   const [editando, setEditando] = useState<Producto | null>(null);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<Producto | null>(null);
 
   const fetchProductos = (): void => {
     api.get(`/productos?t=${Date.now()}`)
@@ -52,15 +56,24 @@ export default function ProductosPage(): JSX.Element {
     }
   };
 
-  const eliminar = (id: number): void => {
-    if (confirm("¿Eliminar este producto del menú?")) {
-      api.delete(`/productos/${id}`)
-        .then(() => {
-          notify({ message: "Producto eliminado", severity: "success" });
-          fetchProductos();
-        });
+  const askDelete = (producto: Producto): void => {
+    setItemToDelete(producto);
+    setConfirmOpen(true);
+  };
+
+  const confirmDelete = async (): Promise<void> => {
+    if (!itemToDelete) return;
+    try {
+      await api.delete(`/productos/${itemToDelete.id}`);
+      notify({ message: "Producto eliminado", severity: "success" });
+      fetchProductos();
+    } catch {
+      notify({ message: "Error al eliminar el producto", severity: "error" });
+    } finally {
+      setConfirmOpen(false);
+      setItemToDelete(null);
     }
-  }
+  };
 
   const filtrados = Array.isArray(productos) 
     ? productos.filter(p => p.nombre.toLowerCase().includes(filtro.toLowerCase()))
@@ -107,7 +120,7 @@ export default function ProductosPage(): JSX.Element {
                 <IconButton onClick={() => { setEditando(prod); setOpen(true); }} sx={{ color: "#F55345" }}>
                   <Edit />
                 </IconButton>
-                <IconButton onClick={() => eliminar(prod.id)} color="error">
+                <IconButton onClick={() => askDelete(prod)} color="error">
                   <Delete />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -122,6 +135,14 @@ export default function ProductosPage(): JSX.Element {
         initial={editando}
         onClose={() => setOpen(false)}
         onSubmit={handleSave}
+      />
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirmar eliminación"
+        description={`¿Eliminar el producto "${itemToDelete?.nombre || ""}" del menú?`}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={confirmDelete}
       />
     </Box>
   );

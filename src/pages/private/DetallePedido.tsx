@@ -8,7 +8,7 @@ import { Search, Edit, Delete } from "@mui/icons-material";
 import { 
   getDetallePedidos, 
   deleteDetallePedido, 
-  type DetallePedido 
+  type DetallePedido as DetallePedidoType 
 } from "../../services/detalle-pedido.service";
 import DetallePedidoFormDialog from "../../components/detalle-pedido/DetallePedidoFormDialog";
 
@@ -18,19 +18,24 @@ import { usePedidosOptions } from "../../hooks/usePedidosOptions";
 export default function DetallePedido(): JSX.Element {
   const location = useLocation();
   
-  const { options: productos, loading: loadingProd } = useProductosOptions();
-  const { options: pedidos, loading: loadingPed } = usePedidosOptions();
+  const { options: productos = [], loading: loadingProd } = useProductosOptions();
+  const { options: pedidos = [], loading: loadingPed } = usePedidosOptions();
 
-  const [detalles, setDetalles] = useState<DetallePedido[]>([]);
+  const [detalles, setDetalles] = useState<DetallePedidoType[]>([]);
   const [filtro, setFiltro] = useState("");
   const [open, setOpen] = useState(false);
-  const [editando, setEditando] = useState<DetallePedido | null>(null);
+  const [editando, setEditando] = useState<DetallePedidoType | null>(null);
   const [fetching, setFetching] = useState(false);
 
   const fetchDetalles = (): void => {
     setFetching(true);
     getDetallePedidos()
-      .then(res => setDetalles(res.items))
+      .then(res => {
+        setDetalles(Array.isArray(res?.items) ? res.items : []);
+      })
+      .catch(() => {
+        setDetalles([]);
+      })
       .finally(() => setFetching(false));
   }
 
@@ -43,9 +48,9 @@ export default function DetallePedido(): JSX.Element {
     }
   }, [location.state]);
 
-  const filtrados = detalles.filter(d =>
-    d.producto?.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
-    d.pedidoId.toString().includes(filtro)
+  const filtrados = (Array.isArray(detalles) ? detalles : []).filter(d =>
+    d.producto?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
+    d.pedidoId?.toString().includes(filtro)
   );
 
   const eliminar = (id: number): void => {
@@ -59,7 +64,7 @@ export default function DetallePedido(): JSX.Element {
     setOpen(true);
   }
 
-  const abrirEditar = (detalle: DetallePedido): void => {
+  const abrirEditar = (detalle: DetallePedidoType): void => {
     setEditando(detalle);
     setOpen(true);
   }
@@ -96,7 +101,7 @@ export default function DetallePedido(): JSX.Element {
           {filtrados.map((detalle) => (
             <ListItem key={detalle.id} divider>
               <ListItemText 
-                primary={`${detalle.producto?.nombre} x ${detalle.cantidad}`} 
+                primary={`${detalle.producto?.nombre || 'Producto sin nombre'} x ${detalle.cantidad}`} 
                 secondary={`Pedido #${detalle.pedidoId} - Subtotal: $${detalle.subtotal}`} 
               />
               <ListItemSecondaryAction>
@@ -111,7 +116,7 @@ export default function DetallePedido(): JSX.Element {
           ))}
           {filtrados.length === 0 && !fetching && (
             <Typography sx={{ p: 3, textAlign: "center", color: "text.secondary" }}>
-              No se encontraron registros.
+              No se encontraron registros o hubo un error de conexión.
             </Typography>
           )}
         </List>
@@ -121,8 +126,8 @@ export default function DetallePedido(): JSX.Element {
         open={open}
         mode={editando ? "edit" : "create"}
         initial={editando || (location.state?.nuevoPedidoId ? { pedidoId: location.state.nuevoPedidoId } as any : null)}
-        productos={productos} 
-        pedidos={pedidos}
+        productos={productos || []} 
+        pedidos={pedidos || []}
         onClose={() => setOpen(false)}
         onSubmit={() => {
             setOpen(false);

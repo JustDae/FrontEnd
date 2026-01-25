@@ -1,4 +1,4 @@
-import {JSX, useEffect, useState} from "react";
+import {type JSX, useEffect, useState} from "react";
 import { Alert, Box, Button, Chip, CircularProgress, Stack, Typography } from "@mui/material";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { getPublicPostById, type PublicPostDto } from "../../services/posts.service";

@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {JSX, useEffect, useMemo, useState} from "react";
+import { type JSX, useEffect, useMemo, useState} from "react";
 import { useSearchParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";

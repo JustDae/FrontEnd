@@ -45,7 +45,7 @@ export default function PublicProducts(): JSX.Element {
 
       <Grid container spacing={4}>
         {productos.map((prod) => (
-          <Grid item key={prod.id} xs={12} sm={6} md={4}>
+          <Grid key={prod.id} xs={12} sm={6} md={4}>
             <Card 
               elevation={0} 
               sx={{ 

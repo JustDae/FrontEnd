@@ -21,10 +21,12 @@ interface MenuItemType {
 }
 
 const menuItems: MenuItemType[] = [
-  { text: "Posts", path: "/dashboard/posts" },
+  { text: "Inicio", path: "/dashboard" },
+  { text: "Productos", path: "/dashboard/productos" },
   { text: "Categorías", path: "/dashboard/categories" },
   { text: "Detalle Pedido", path: "/dashboard/detalle-pedido" },
   { text: "Usuarios", path: "/dashboard/users" },
+  { text: "Posts", path: "/dashboard/posts" },
 ];
 
 export default function DashboardLayout(): JSX.Element {

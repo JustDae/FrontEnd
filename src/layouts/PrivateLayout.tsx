@@ -22,6 +22,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import ArticleIcon from "@mui/icons-material/Article";
 import GroupIcon from "@mui/icons-material/Group";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import FastfoodIcon from "@mui/icons-material/Fastfood"; 
 
 const drawerWidth = 260;
 
@@ -35,6 +36,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Inicio", to: "/dashboard", icon: <DashboardIcon /> },
   { label: "Categorías", to: "/dashboard/categories", icon: <CategoryIcon /> },
+  { label: "Productos", to: "/dashboard/productos", icon: <FastfoodIcon /> },
   { label: "Posts", to: "/dashboard/posts", icon: <ArticleIcon /> },
   { label: "Detalle Pedido", to: "/dashboard/detalle-pedido", icon: <ReceiptLongIcon /> },
   { label: "Users", to: "/dashboard/users", icon: <GroupIcon />, roles: ["ADMIN"] },
@@ -66,7 +68,7 @@ export default function PrivateLayout(): JSX.Element {
           Restaurante Admin
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {user?.email || user?.username || "Dae"}
+          {user?.email || user?.username}
         </Typography>
         <Typography variant="caption" color="text.secondary">
           Rol: {role}

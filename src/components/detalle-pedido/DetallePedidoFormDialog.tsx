@@ -38,15 +38,15 @@ export default function DetallePedidoFormDialog({
   onClose,
   onSubmit,
 }: Props): JSX.Element {
-  const [pedidoId, setPedidoId] = useState<string>("");
-  const [productoId, setProductoId] = useState<string>("");
+  const [pedidoId, setPedidoId] = useState<string | number>("");
+  const [productoId, setProductoId] = useState<string | number>("");
   const [cantidad, setCantidad] = useState<number>(1);
   const [observaciones, setObservaciones] = useState("");
 
   useEffect(() => {
     if (open) {
-      setPedidoId(initial?.pedidoId?.toString() || "");
-      setProductoId(initial?.productoId?.toString() || "");
+      setPedidoId(initial?.pedidoId || "");
+      setProductoId(initial?.productoId || "");
       setCantidad(initial?.cantidad || 1);
       setObservaciones(initial?.observaciones || "");
     }
@@ -69,7 +69,7 @@ export default function DetallePedidoFormDialog({
       </DialogTitle>
 
       <DialogContent>
-        <Stack spacing={3} component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Stack spacing={3} component="form" id="detalle-form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           
           <FormControl fullWidth required>
             <InputLabel>Pedido</InputLabel>
@@ -79,7 +79,9 @@ export default function DetallePedidoFormDialog({
               onChange={(e) => setPedidoId(e.target.value)}
             >
               {pedidos.map((p) => (
-                <MenuItem key={p.id} value={p.id}>Pedido #{p.id} - {p.nombre_cliente}</MenuItem>
+                <MenuItem key={p.id} value={p.id}>
+                  Pedido #{p.id} - {p.nombre_cliente}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -92,7 +94,9 @@ export default function DetallePedidoFormDialog({
               onChange={(e) => setProductoId(e.target.value)}
             >
               {productos.map((prod) => (
-                <MenuItem key={prod.id} value={prod.id}>{prod.nombre} (${prod.precio})</MenuItem>
+                <MenuItem key={prod.id} value={prod.id}>
+                  {prod.nombre} (${prod.precio})
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -104,7 +108,7 @@ export default function DetallePedidoFormDialog({
             onChange={(e) => setCantidad(Number(e.target.value))}
             fullWidth
             required
-            slotProps={{ htmlInput: { min: 1 } }}
+            inputProps={{ min: 1 }}
           />
 
           <TextField
@@ -116,25 +120,26 @@ export default function DetallePedidoFormDialog({
             minRows={3}
             placeholder="Ej: Sin cebolla, término medio, etc."
           />
-
-          <DialogActions sx={{ px: 0, pt: 2 }}>
-            <Button onClick={onClose} sx={{ color: "text.secondary" }}>
-              Cancelar
-            </Button>
-            <Button 
-              type="submit" 
-              variant="contained" 
-              disabled={!pedidoId || !productoId || cantidad < 1}
-              sx={{ 
-                bgcolor: "#F55345", 
-                "&:hover": { bgcolor: "#d44538" } 
-              }}
-            >
-              {mode === "create" ? "Enviar a cocina" : "Actualizar"}
-            </Button>
-          </DialogActions>
         </Stack>
       </DialogContent>
+      
+      <DialogActions sx={{ px: 3, pb: 3 }}>
+        <Button onClick={onClose} sx={{ color: "text.secondary" }}>
+          Cancelar
+        </Button>
+        <Button 
+          type="submit"
+          form="detalle-form"
+          variant="contained" 
+          disabled={!pedidoId || !productoId || cantidad < 1}
+          sx={{ 
+            bgcolor: "#F55345", 
+            "&:hover": { bgcolor: "#d44538" } 
+          }}
+        >
+          {mode === "create" ? "Enviar a cocina" : "Actualizar"}
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

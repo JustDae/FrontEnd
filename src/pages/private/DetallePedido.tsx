@@ -1,22 +1,22 @@
 import { useState, useEffect, type JSX } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Box, Typography, TextField, IconButton, Button,
   List, ListItem, ListItemText, ListItemSecondaryAction, Paper, LinearProgress
 } from "@mui/material";
-import { Search, Edit, Delete } from "@mui/icons-material";
+import { Search, Edit, Delete, ArrowBack } from "@mui/icons-material";
 import { 
   getDetallePedidos, 
   deleteDetallePedido, 
   type DetallePedido as DetallePedidoType 
 } from "../../services/detalle-pedido.service";
 import DetallePedidoFormDialog from "../../components/detalle-pedido/DetallePedidoFormDialog";
-
 import { useProductosOptions } from "../../hooks/useProductosOptions";
 import { usePedidosOptions } from "../../hooks/usePedidosOptions";
 
 export default function DetallePedido(): JSX.Element {
-  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   
   const { options: productos = [], loading: loadingProd } = useProductosOptions();
   const { options: pedidos = [], loading: loadingPed } = usePedidosOptions();
@@ -31,31 +31,19 @@ export default function DetallePedido(): JSX.Element {
     setFetching(true);
     getDetallePedidos()
       .then(res => {
-        setDetalles(Array.isArray(res?.items) ? res.items : []);
+        const lista = Array.isArray(res?.items) ? res.items : [];
+        const filtradosPorPedido = id ? lista.filter((d: any) => d.pedidoId === id) : lista;
+        setDetalles(filtradosPorPedido);
       })
-      .catch(() => {
-        setDetalles([]);
-      })
+      .catch(() => setDetalles([]))
       .finally(() => setFetching(false));
   }
 
-  useEffect(fetchDetalles, []);
+  useEffect(fetchDetalles, [id]);
 
-  useEffect(() => {
-    if (location.state?.nuevoPedidoId) {
-      setEditando(null);
-      setOpen(true);
-    }
-  }, [location.state]);
-
-  const filtrados = (Array.isArray(detalles) ? detalles : []).filter(d =>
-    d.producto?.nombre?.toLowerCase().includes(filtro.toLowerCase()) ||
-    d.pedidoId?.toString().includes(filtro)
-  );
-
-  const eliminar = (id: number): void => {
-    if (confirm("¿Eliminar este detalle del pedido?")) {
-      deleteDetallePedido(id).then(fetchDetalles);
+  const eliminar = (idDetalle: number): void => {
+    if (confirm("¿Eliminar este plato del pedido?")) {
+      deleteDetallePedido(idDetalle).then(fetchDetalles);
     }
   }
 
@@ -71,8 +59,16 @@ export default function DetallePedido(): JSX.Element {
 
   return (
     <Box sx={{ p: 3 }}>
+      <Button 
+        startIcon={<ArrowBack />} 
+        onClick={() => navigate("/dashboard/pedidos")}
+        sx={{ mb: 2 }}
+      >
+        Volver a Pedidos
+      </Button>
+
       <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-        Detalles de Pedidos
+        Mesa: {id?.substring(0, 8)}...
       </Typography>
       
       {(loadingProd || loadingPed || fetching) && (
@@ -81,7 +77,7 @@ export default function DetallePedido(): JSX.Element {
 
       <Box display="flex" gap={2} alignItems="center" mb={2}>
         <TextField
-          placeholder="Buscar por plato o # pedido..."
+          placeholder="Buscar plato en esta mesa..."
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
           InputProps={{ endAdornment: <Search /> }}
@@ -92,17 +88,17 @@ export default function DetallePedido(): JSX.Element {
           onClick={abrirNuevo}
           sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" }, minWidth: "160px" }}
         >
-          Nuevo detalle
+          Añadir Plato
         </Button>
       </Box>
 
       <Paper variant="outlined">
         <List>
-          {filtrados.map((detalle) => (
+          {detalles.filter(d => d.producto?.nombre?.toLowerCase().includes(filtro.toLowerCase())).map((detalle) => (
             <ListItem key={detalle.id} divider>
               <ListItemText 
-                primary={`${detalle.producto?.nombre || 'Producto sin nombre'} x ${detalle.cantidad}`} 
-                secondary={`Pedido #${detalle.pedidoId} - Subtotal: $${detalle.subtotal}`} 
+                primary={`${detalle.producto?.nombre} x ${detalle.cantidad}`} 
+                secondary={`Subtotal: $${detalle.subtotal}`} 
               />
               <ListItemSecondaryAction>
                 <IconButton onClick={() => abrirEditar(detalle)} sx={{ color: "#F55345" }}>
@@ -114,9 +110,9 @@ export default function DetallePedido(): JSX.Element {
               </ListItemSecondaryAction>
             </ListItem>
           ))}
-          {filtrados.length === 0 && !fetching && (
+          {detalles.length === 0 && !fetching && (
             <Typography sx={{ p: 3, textAlign: "center", color: "text.secondary" }}>
-              No se encontraron registros o hubo un error de conexión.
+              Esta mesa aún no tiene consumos.
             </Typography>
           )}
         </List>
@@ -125,9 +121,9 @@ export default function DetallePedido(): JSX.Element {
       <DetallePedidoFormDialog
         open={open}
         mode={editando ? "edit" : "create"}
-        initial={editando || (location.state?.nuevoPedidoId ? { pedidoId: location.state.nuevoPedidoId } as any : null)}
-        productos={productos || []} 
-        pedidos={pedidos || []}
+        initial={editando || ({ pedidoId: id } as any)}
+        productos={productos} 
+        pedidos={pedidos}
         onClose={() => setOpen(false)}
         onSubmit={() => {
             setOpen(false);

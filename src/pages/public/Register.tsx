@@ -16,7 +16,10 @@ export default function Register(): JSX.Element {
     e.preventDefault();
     try {
       setError(null);
-      await register({ username, email, password });
+      await register({
+        username, email, password,
+        rolId: 0
+      });
       navigate("/dashboard", { replace: true });
     } catch {
       setError("No se pudo registrar. Revisa los datos o intenta más tarde.");

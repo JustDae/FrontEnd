@@ -18,7 +18,7 @@ export const privateRoutes: RouteObject = {
     { path: "categories", element: <CategoriesPage /> },
     { path: "productos", element: <ProductosPage /> },
     { path: "posts", element: <PostsPage /> },
-    { path: "detalle-pedido/:id", element: <DetallePedido /> },
+    { path: "detalle-pedido/:id?", element: <DetallePedido /> }, 
     { path: "forbidden", element: <Forbidden /> },
     { path: "pedidos", element: <PedidosPage/>},
     { path: "audit-logs", element: <AuditLogsPage /> },
@@ -32,4 +32,4 @@ export const privateRoutes: RouteObject = {
       ),
     },
   ],
-};
+}; 

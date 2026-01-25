@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { getProductImageUrl } from "../../services/productos.service";
 import api from "../../services/api";
 import { HomeCarousel } from "../../components/public/HomeCarousel";
 
@@ -76,7 +77,7 @@ export default function PublicHome(): JSX.Element {
             search: debouncedQ
           }
         });
-        
+
         const result = res.data?.data?.items || res.data?.items || [];
         setItems(result);
         setTotalPages(res.data?.data?.meta?.totalPages || 1);
@@ -144,10 +145,7 @@ export default function PublicHome(): JSX.Element {
                     <CardMedia
                       component="img"
                       height="220"
-                      image={p.imageUrl 
-                        ? `http://localhost:3000/public/productos/${p.imageUrl}` 
-                        : "/images/placeholder-food.png"
-                      }
+                      image={getProductImageUrl(p.imageUrl)}
                       alt={p.nombre}
                       sx={{ objectFit: 'cover' }}
                     />

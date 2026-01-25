@@ -46,3 +46,15 @@ export const deleteProducto = async (id: number) => {
   const { data } = await api.delete(`/productos/${id}`);
   return data;
 };
+
+export const getProductImageUrl = (imageName?: string) => {
+  if (!imageName) {
+    return "/images/plato-default.png";
+  }
+  if (imageName.startsWith('http')) {
+    return imageName;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  return `${cleanBaseUrl}/uploads/productos/${imageName}`;
+};

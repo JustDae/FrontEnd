@@ -8,6 +8,7 @@ import api from "../../services/api";
 import { useUi } from "../../context/UiContext";
 import ProductoFormDialog from "../../components/productos/ProductoFormDialog";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
+import { getProductImageUrl } from "../../services/productos.service";
 
 interface Producto {
   id: number;
@@ -75,7 +76,7 @@ export default function ProductosPage(): JSX.Element {
     }
   };
 
-  const filtrados = Array.isArray(productos) 
+  const filtrados = Array.isArray(productos)
     ? productos.filter(p => p.nombre.toLowerCase().includes(filtro.toLowerCase()))
     : [];
 
@@ -93,8 +94,8 @@ export default function ProductosPage(): JSX.Element {
           fullWidth
           InputProps={{ endAdornment: <Search /> }}
         />
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={() => { setEditando(null); setOpen(true); }}
           sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" }, minWidth: "150px" }}
         >
@@ -106,12 +107,13 @@ export default function ProductosPage(): JSX.Element {
         <List>
           {filtrados.map((prod) => (
             <ListItem key={prod.id} divider>
-              <Avatar 
-                src={prod.imageUrl ? `http://localhost:3000/public/productos/${prod.imageUrl}` : undefined}
+              <Avatar
+                src={prod.imageUrl ? getProductImageUrl(prod.imageUrl) : undefined}
                 sx={{ bgcolor: "rgba(245, 83, 69, 0.1)", color: "#F55345", mr: 2, width: 56, height: 56 }}
               >
                 {!prod.imageUrl && <Fastfood />}
               </Avatar>
+
               <ListItemText 
                 primary={prod.nombre} 
                 secondary={`${prod.categoria?.name || "Sin categoría"} — Precio: $${prod.precio}`} 

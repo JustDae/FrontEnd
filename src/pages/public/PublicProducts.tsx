@@ -1,7 +1,6 @@
 import { type JSX, useEffect, useState } from "react";
 import { 
-  Box, Typography, Grid, Card, CardContent, CardMedia, 
-  Chip, CircularProgress, Alert, Container, Stack 
+  Box, Typography, Grid, Card, CardContent, Chip, CircularProgress, Alert, Container, Stack
 } from "@mui/material";
 import { getProductos, type Producto } from "../../services/productos.service";
 

@@ -10,6 +10,14 @@ export interface Pedido {
 
 export interface CreatePedidoDto {
   nombre_cliente: string;
+  direccion: string;
+  telefono: string;
+  correo: string;
+  estado: string;
+  fecha_pedido: string;
+  total?: number;
+  mesaId: number;
+  metodoPagoId: number;
 }
 
 export interface UpdatePedidoDto {

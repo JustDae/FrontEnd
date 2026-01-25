@@ -15,7 +15,16 @@ export default function NewPedido(): JSX.Element {
     setLoading(false);
     try {
       setLoading(true);
-      const res = await createPedido({ nombre_cliente: nombre.trim() });
+      const res = await createPedido({
+      nombre_cliente: nombre.trim(),
+      direccion: "Local",
+      telefono: "9999999999",
+      correo: "cliente@email.com",
+      estado: "PENDIENTE",
+      fecha_pedido: new Date().toISOString(),
+      mesaId: 1,
+      metodoPagoId: 1
+    });
       notify({ message: "Pedido iniciado", severity: "success" });
       
       navigate("/dashboard/detalle-pedido", { 

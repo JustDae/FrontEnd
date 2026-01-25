@@ -11,7 +11,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import {JSX, useEffect, useState} from "react";
+import {type JSX, useEffect, useState} from "react";
 import type {UserDto} from "../../services/users.service";
 
 type Props = {
@@ -32,7 +32,7 @@ export default function UserFormDialog({ open, mode, initial, onClose, onSubmit 
     if (open) {
       setUsername(initial?.username || "");
       setEmail(initial?.email || "");
-      setRole((initial?.role as string) || "USER");
+      setRole((initial?.rol as unknown as string) || "USER");
       setPassword("");
     }
   }, [open, initial]);

@@ -7,13 +7,14 @@ export type AuthUser = {
   email?: string;
   username?: string;
   role?: string;
+  rolId?: number;
 };
 
 type AuthContextType = {
   user: AuthUser | null;
   token: string | null;
   login: (payload: { username: string; password: string }) => Promise<void>;
-  register: (payload: { username: string; email: string; password: string }) => Promise<void>;
+  register: (payload: { username: string; email: string; password: string; rolId: number }) => Promise<void>;
   logout: () => void;
 };
 
@@ -21,15 +22,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 function parseJwt(token: string): Record<string, any> | null {
   try {
-    const base64 = token
-      .split(".")[1]
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-
+    const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
     const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
-    const json = window.atob(padded);
-
-    return JSON.parse(json);
+    return JSON.parse(window.atob(padded));
   } catch {
     return null;
   }
@@ -40,30 +35,28 @@ function userFromToken(token: string): AuthUser | null {
   if (!payload) return null;
 
   return {
-    id: payload.id ?? payload.userId ?? payload.sub,
+    id: payload.id ?? payload.sub,
     email: payload.email,
     username: payload.username,
     role: payload.role,
+    rolId: payload.rolId,
   };
 }
 
 function loadInitialAuth(): { token: string | null; user: AuthUser | null } {
-  const token = localStorage.getItem("auth_token");
+  const token = localStorage.getItem("token");
   const rawUser = localStorage.getItem("auth_user");
   const storedUser: AuthUser | null = rawUser ? JSON.parse(rawUser) : null;
 
   if (token) {
     const jwtUser = userFromToken(token);
-    const merged = { ...(storedUser || {}), ...(jwtUser || {}) };
-    return { token, user: merged };
+    return { token, user: { ...(storedUser || {}), ...(jwtUser || {}) } };
   }
-
   return { token: null, user: storedUser };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const initial = loadInitialAuth();
-
   const [token, setToken] = useState<string | null>(initial.token);
   const [user, setUser] = useState<AuthUser | null>(initial.user);
 
@@ -74,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(token);
     setUser(merged);
 
-    localStorage.setItem("auth_token", token);
+    localStorage.setItem("token", token);
     localStorage.setItem("auth_user", JSON.stringify(merged));
   };
 
@@ -83,30 +76,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     persistAuth(token, { username: payload.username });
   };
 
-  const register = async (payload: { username: string; email: string; password: string }) => {
+  const register = async (payload: { username: string; email: string; password: string; rolId: number }) => {
     const token = await registerApi(payload);
-    persistAuth(token, { username: payload.username, email: payload.email });
+    persistAuth(token, { username: payload.username, email: payload.email, rolId: payload.rolId });
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("auth_user");
-    localStorage.removeItem("auth_token");
+    localStorage.removeItem("token");
   };
 
-  const value = useMemo(
-    () => ({ user, token, login, register, logout }),
-    [user, token]
-  );
+  const value = useMemo(() => ({ user, token, login, register, logout }), [user, token]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth debe usarse dentro de AuthProvider");
-  }
+  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
   return context;
 }

@@ -31,7 +31,7 @@ export type UserDto = {
   id: string;
   username: string;
   email?: string;
-  role?: string;
+  rol?: { id: number; nombre: string };
 };
 
 export async function getUsers(params?: {
@@ -59,7 +59,7 @@ export async function createUser(payload: {
   username: string;
   email: string;
   password: string;
-  role?: string;
+  rolId: number;
 }): Promise<UserDto> {
   const { data } = await api.post<SuccessResponseDto<UserDto>>("/users", payload);
   return data.data;
@@ -68,7 +68,7 @@ export async function createUser(payload: {
 export async function updateUser(id: string, payload: {
   username: string;
   email: string;
-  role?: string;
+  rolId?: number;
 }): Promise<UserDto> {
   const { data } = await api.put<SuccessResponseDto<UserDto>>(`/users/${id}`, payload);
   return data.data;

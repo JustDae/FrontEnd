@@ -2,7 +2,6 @@ import {
   Alert,
   Button,
   Chip,
-  CircularProgress,
   IconButton,
   Pagination,
   Paper,
@@ -15,6 +14,15 @@ import {
   TableRow,
   TextField,
   Typography,
+  InputAdornment,
+  Tooltip,
+  Breadcrumbs,
+  Link,
+  Card,
+  CardContent,
+  Skeleton,
+  Box,
+  Avatar,
 } from "@mui/material";
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -22,6 +30,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import SearchIcon from "@mui/icons-material/Search";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import PaidIcon from '@mui/icons-material/Paid';
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 
 import { 
   type DetallePedido, 
@@ -73,6 +86,10 @@ export default function DetallePedidoPage(): JSX.Element {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState<DetallePedido | null>(null);
 
+  const totalVendido = useMemo(() => 
+    items.reduce((acc, curr) => acc + (Number(curr.subtotal) || 0), 0), 
+  [items]);
+
   const queryKey = useMemo(() => ({
     page,
     limit,
@@ -101,7 +118,7 @@ export default function DetallePedidoPage(): JSX.Element {
       setItems(Array.isArray(res?.items) ? res.items : []);
       setTotalPages(res?.meta?.totalPages || 1);
     } catch {
-      setError("No se pudieron cargar los detalles de pedidos.");
+      setError("No se pudieron cargar los detalles.");
     } finally {
       setLoading(false);
     }
@@ -111,27 +128,15 @@ export default function DetallePedidoPage(): JSX.Element {
     load();
   }, [queryKey]);
 
-  const onCreate = () => {
-    setMode("create");
-    setCurrent(null);
-    setOpen(true);
-  };
-
-  const onEdit = (item: DetallePedido) => {
-    setMode("edit");
-    setCurrent(item);
-    setOpen(true);
-  };
-
   const onSubmit = async (payload: any) => {
     try {
       if (mode === "create") {
         await createDetallePedido(payload);
-        notify({ message: "Detalle creado con éxito", severity: "success" });
+        notify({ message: "Plato agregado con éxito", severity: "success" });
         setPage(1);
       } else if (current) {
         await updateDetallePedido(current.id, payload);
-        notify({ message: "Detalle actualizado con éxito", severity: "success" });
+        notify({ message: "Línea actualizada con éxito", severity: "success" });
       }
       setOpen(false);
       await load();
@@ -140,16 +145,11 @@ export default function DetallePedidoPage(): JSX.Element {
     }
   };
 
-  const askDelete = (item: DetallePedido) => {
-    setToDelete(item);
-    setConfirmOpen(true);
-  };
-
   const confirmDelete = async () => {
     if (!toDelete) return;
     try {
       await deleteDetallePedido(toDelete.id);
-      notify({ message: "Detalle eliminado.", severity: "success" });
+      notify({ message: "Registro eliminado", severity: "success" });
       setConfirmOpen(false);
       setToDelete(null);
       await load();
@@ -158,105 +158,177 @@ export default function DetallePedidoPage(): JSX.Element {
     }
   };
 
+  const onEdit = (item: DetallePedido) => {
+    setMode("edit");
+    setCurrent(item);
+    setOpen(true);
+  };
+
   return (
-    <Stack spacing={2} sx={{ p: 3 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h4" sx={{ fontWeight: "bold" }}>Detalles de Pedidos</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onCreate}
-          sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" } }}
-        >
-          Nuevo Detalle
-        </Button>
-      </Stack>
+    <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f4f6f8", minHeight: "100vh" }}>
+      <Box sx={{ mb: 4 }}>
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 1.5 }}>
+          <Link underline="hover" color="inherit" onClick={() => navigate("/dashboard")} sx={{ cursor: 'pointer', fontSize: 14 }}>
+            Dashboard
+          </Link>
+          <Typography color="text.primary" sx={{ fontWeight: 600, fontSize: 14 }}>Gestión de Pedidos</Typography>
+        </Breadcrumbs>
+        
+        <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={2}>
+          <Box>
+            <Typography variant="h4" sx={{ fontWeight: 800, color: "#1c252e", letterSpacing: -0.5 }}>
+              Líneas de Facturación
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Detalle individual de productos por comanda
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => { setMode("create"); setCurrent(null); setOpen(true); }}
+            sx={{ 
+              bgcolor: "#F55345", 
+              "&:hover": { bgcolor: "#d44538" }, 
+              borderRadius: "10px", 
+              px: 3,
+              py: 1.2,
+              textTransform: "none",
+              fontWeight: 700,
+              boxShadow: "0 8px 16px 0 rgba(245, 83, 69, 0.24)"
+            }}
+          >
+            Nuevo Registro
+          </Button>
+        </Stack>
+      </Box>
 
-      {error && <Alert severity="error" onClose={() => setError(null)}>{error}</Alert>}
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 3, mb: 4 }}>
+        <Card sx={{ borderRadius: "16px", boxShadow: "0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)" }}>
+          <CardContent sx={{ p: 3 }}>
+            <Stack direction="row" spacing={2.5} alignItems="center">
+              <Avatar sx={{ bgcolor: "rgba(245, 83, 69, 0.12)", color: "#F55345", width: 54, height: 54 }}>
+                <ReceiptLongIcon />
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 700, mb: 0.5 }}>TOTAL REGISTROS</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 800 }}>{items.length}</Typography>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+        
+        <Card sx={{ borderRadius: "16px", boxShadow: "0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12)" }}>
+          <CardContent sx={{ p: 3 }}>
+            <Stack direction="row" spacing={2.5} alignItems="center">
+              <Avatar sx={{ bgcolor: "rgba(34, 197, 94, 0.12)", color: "#22c55e", width: 54, height: 54 }}>
+                <PaidIcon />
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 700, mb: 0.5 }}>VENTA ACUMULADA</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 800, color: "#1b5e20" }}>${totalVendido.toFixed(2)}</Typography>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
 
-      <TextField
-        label="Buscar por cliente o plato..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        fullWidth
-      />
+      <Paper sx={{ p: 0.5, mb: 3, borderRadius: "12px", border: "1px solid rgba(145, 158, 171, 0.2)", display: "flex", alignItems: "center", bgcolor: "white" }}>
+        <InputAdornment position="start" sx={{ ml: 2 }}>
+          <SearchIcon sx={{ color: "text.disabled" }} />
+        </InputAdornment>
+        <TextField
+          placeholder="Escribe ID de pedido o nombre de plato..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          fullWidth
+          variant="standard"
+          InputProps={{ disableUnderline: true, sx: { py: 1.5, px: 1, fontSize: 15 } }}
+        />
+      </Paper>
 
-      {loading ? (
-        <Stack alignItems="center"><CircularProgress sx={{ color: "#F55345" }} /></Stack>
-      ) : items.length === 0 ? (
-        <Alert severity="info">No hay detalles de pedidos para mostrar.</Alert>
-      ) : (
-        <>
-          <TableContainer component={Paper} variant="outlined">
-            <Table>
-              <TableHead sx={{ bgcolor: "#f5f5f5" }}>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>ID Pedido</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Producto</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Cantidad</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Subtotal</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: "bold" }}>Acciones</TableCell>
+      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: "12px" }}>{error}</Alert>}
+
+      <TableContainer component={Paper} sx={{ borderRadius: "16px", border: "1px solid rgba(145, 158, 171, 0.2)", overflow: "hidden", boxShadow: "none" }}>
+        <Table>
+          <TableHead sx={{ bgcolor: "#f4f6f8" }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 700, color: "#637381", py: 2 }}>ORDEN</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#637381" }}>PRODUCTO</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#637381" }}>CANTIDAD</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#637381" }}>SUBTOTAL</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 700, color: "#637381" }}>ACCIONES</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading ? (
+              [...Array(5)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={5} sx={{ py: 2.5 }}><Skeleton variant="text" height={30} /></TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>#{item.pedidoId}</TableCell>
-                    <TableCell>{item.producto?.nombre || "N/A"}</TableCell>
-                    <TableCell>{item.cantidad}</TableCell>
-                    <TableCell>
-                      <Chip 
-                        size="small" 
-                        label={`$${item.subtotal}`} 
-                        color="primary" 
-                        variant="outlined" 
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => navigate(`/order-detail/${item.id}`)} color="inherit">
-                        <VisibilityIcon />
-                      </IconButton>
-                      <IconButton onClick={() => onEdit(item)} color="primary">
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={() => askDelete(item)} color="error">
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              ))
+            ) : items.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 10 }}>
+                  <Box sx={{ opacity: 0.4 }}>
+                    <ShoppingBasketIcon sx={{ fontSize: 64, mb: 1.5 }} />
+                    <Typography variant="h6">Sin registros encontrados</Typography>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ) : (
+              items.map((item) => (
+                <TableRow key={item.id} hover>
+                  <TableCell>
+                    <Chip 
+                      label={`#${item.pedidoId}`} 
+                      size="small" 
+                      sx={{ fontWeight: 700, bgcolor: "#f4f6f8", color: "#1c252e", borderRadius: "6px" }} 
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: "#1c252e" }}>
+                      {item.producto?.nombre || "N/A"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" color="text.secondary">unid. {item.cantidad}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#F55345" }}>
+                      ${(Number(item.subtotal) || 0).toFixed(2)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+                      <Tooltip title="Ver Orden"><IconButton size="small" onClick={() => navigate(`/dashboard/detalle-pedido/${item.pedidoId}`)} sx={{ color: "#637381" }}><VisibilityIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Editar"><IconButton size="small" onClick={() => onEdit(item)} sx={{ color: "#2065D1" }}><EditIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Eliminar"><IconButton size="small" onClick={() => { setToDelete(item); setConfirmOpen(true); }} sx={{ color: "#FF5630" }}><DeleteIcon fontSize="small" /></IconButton></Tooltip>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-          <Stack direction="row" justifyContent="center">
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={(_, v) => setPage(v)}
-              color="primary"
-            />
-          </Stack>
-        </>
-      )}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Pagination 
+          count={totalPages} 
+          page={page} 
+          onChange={(_, v) => setPage(v)} 
+          color="primary" 
+          size="large" 
+          sx={{
+            '& .MuiPaginationItem-root': { borderRadius: '8px', fontWeight: 700 },
+            '& .Mui-selected': { bgcolor: '#F55345 !important', color: 'white' }
+          }}
+        />
+      </Box>
 
-      <DetallePedidoFormDialog
-        open={open}
-        mode={mode}
-        initial={current}
-        productos={productos}
-        pedidos={pedidos}
-        onClose={() => setOpen(false)}
-        onSubmit={onSubmit}
-      />
-
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Confirmar eliminación"
-        description={`¿Estás seguro de eliminar el producto "${toDelete?.producto?.nombre || ""}" de este pedido?`}
-        onCancel={() => { setConfirmOpen(false); setToDelete(null); }}
-        onConfirm={confirmDelete}
-      />
-    </Stack>
+      <DetallePedidoFormDialog open={open} mode={mode} initial={current} productos={productos} pedidos={pedidos} onClose={() => setOpen(false)} onSubmit={onSubmit} />
+      <ConfirmDialog open={confirmOpen} title="¿Quitar producto del pedido?" description={`Se eliminará "${toDelete?.producto?.nombre}" de la orden #${toDelete?.pedidoId}. Esta acción no se puede deshacer.`} onCancel={() => { setConfirmOpen(false); setToDelete(null); }} onConfirm={confirmDelete} />
+    </Box>
   );
 }

@@ -63,7 +63,6 @@ export default function PrivateLayout(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log("🔥 EL DATO REAL QUE TIENE REACT:", user);
   const typedUser = user as UserWithRole;
   const roleName = typedUser?.rol?.nombre || "UNDEFINED";
   const role = roleName.toUpperCase();

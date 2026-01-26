@@ -42,7 +42,7 @@ export default function UserFormDialog({
       setUsername(initial.username || "");
       setEmail(initial.email || "");
       setRolId(initial.rol?.id || initial.rolId || "");
-      setPreview(initial.profile ? getUserImageUrl(initial.profile) : null);
+      setPreview(initial.profile ? (getUserImageUrl(initial.profile)  || null) : null);
     } else if (open && mode === "create") {
       setUsername("");
       setEmail("");

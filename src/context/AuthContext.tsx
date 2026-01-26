@@ -6,8 +6,10 @@ export type AuthUser = {
   id?: string;
   email?: string;
   username?: string;
-  role?: string;
-  rolId?: number;
+  rol?: {
+    id: number;
+    nombre: string;
+  };
 };
 
 type AuthContextType = {
@@ -38,8 +40,7 @@ function userFromToken(token: string): AuthUser | null {
     id: payload.id ?? payload.sub,
     email: payload.email,
     username: payload.username,
-    role: payload.role,
-    rolId: payload.rolId,
+    rol: payload.rol,
   };
 }
 

@@ -1,8 +1,8 @@
 import {
-  Button, IconButton, Pagination, Paper, Stack, Table,
+  Alert, Button, IconButton, Pagination, Paper, Stack, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow, TextField,
   Typography, InputAdornment, Breadcrumbs, Link, Card, 
-  CardContent, Skeleton, Box, Grid, Avatar,
+  CardContent, Skeleton, Box, Avatar, Grid
 } from "@mui/material";
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -65,7 +65,7 @@ export default function DetallePedidoPage(): JSX.Element {
   const [toDelete, setToDelete] = useState<DetallePedido | null>(null);
 
   const totalVendido = useMemo(() => 
-    items.reduce((acc, curr) => acc + Number(curr.subtotal || 0), 0), 
+    items.reduce((acc, curr) => acc + (Number(curr.subtotal) || 0), 0), 
   [items]);
 
   const queryKey = useMemo(() => ({
@@ -96,7 +96,7 @@ export default function DetallePedidoPage(): JSX.Element {
       setItems(Array.isArray(res?.items) ? res.items : []);
       setTotalPages(res?.meta?.totalPages || 1);
     } catch {
-      setError("No se pudieron cargar los detalles.");
+      setError("Error al cargar los detalles.");
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,7 @@ export default function DetallePedidoPage(): JSX.Element {
     try {
       if (mode === "create") {
         await createDetallePedido(payload);
-        notify({ message: "Detalle agregado", severity: "success" });
+        notify({ message: "Plato agregado", severity: "success" });
         setPage(1);
       } else if (current) {
         await updateDetallePedido(current.id, payload);
@@ -143,7 +143,7 @@ export default function DetallePedidoPage(): JSX.Element {
   };
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f8f9fa", minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f9f9f9", minHeight: "100vh" }}>
       <Box sx={{ mb: 4 }}>
         <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 1 }}>
           <Link underline="hover" color="inherit" onClick={() => navigate("/dashboard")} sx={{ cursor: 'pointer', fontSize: 13 }}>
@@ -153,31 +153,21 @@ export default function DetallePedidoPage(): JSX.Element {
         </Breadcrumbs>
         
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: "#1c252e" }}>Líneas de Pedido</Typography>
-            <Typography variant="body2" color="text.secondary">Gestión de productos por comanda</Typography>
-          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: "#2d3436" }}>Líneas de Pedido</Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => { setMode("create"); setCurrent(null); setOpen(true); }}
-            sx={{ 
-              bgcolor: "#F55345", 
-              "&:hover": { bgcolor: "#d44538" }, 
-              borderRadius: "10px", 
-              px: 3,
-              textTransform: "none",
-              fontWeight: 700
-            }}
+            sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" }, borderRadius: "12px", px: 3, textTransform: "none", fontWeight: 700 }}
           >
-            Nuevo Registro
+            Agregar Producto
           </Button>
         </Stack>
       </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card variant="outlined" sx={{ borderRadius: "16px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+          <Card variant="outlined" sx={{ borderRadius: "16px", borderLeft: "6px solid #F55345", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
             <CardContent>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar sx={{ bgcolor: "rgba(245, 83, 69, 0.1)", color: "#F55345", width: 56, height: 56 }}>
@@ -192,7 +182,7 @@ export default function DetallePedidoPage(): JSX.Element {
           </Card>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Card variant="outlined" sx={{ borderRadius: "16px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+          <Card variant="outlined" sx={{ borderRadius: "16px", borderLeft: "6px solid #4caf50", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
             <CardContent>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar sx={{ bgcolor: "rgba(76, 175, 80, 0.1)", color: "#4caf50", width: 56, height: 56 }}>
@@ -209,31 +199,25 @@ export default function DetallePedidoPage(): JSX.Element {
       </Grid>
 
       <TextField
-        placeholder="Buscar por ID o nombre..."
+        placeholder="Buscar por ID o producto..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         fullWidth
-        sx={{ 
-          mt: 3,
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "12px",
-            bgcolor: "white"
-          }
-        }}
-        InputProps={{
-          startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>)
-        }}
+        sx={{ mt: 3, "& .MuiOutlinedInput-root": { borderRadius: "12px", bgcolor: "white" } }}
+        InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>) }}
       />
 
-      <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "16px", border: "1px solid #edf2f7", mt: 3, overflow: "hidden" }}>
+      {error && <Alert severity="error" sx={{ mt: 3, borderRadius: "12px" }}>{error}</Alert>}
+
+      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: "16px", mt: 3, overflow: "hidden" }}>
         <Table>
-          <TableHead sx={{ bgcolor: "#f8f9fa" }}>
+          <TableHead sx={{ bgcolor: "#fcfcfc" }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: 700, color: "#718096" }}>ORDEN</TableCell>
-              <TableCell sx={{ fontWeight: 700, color: "#718096" }}>PRODUCTO</TableCell>
-              <TableCell sx={{ fontWeight: 700, color: "#718096" }}>CANT.</TableCell>
-              <TableCell sx={{ fontWeight: 700, color: "#718096" }}>SUBTOTAL</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 700, color: "#718096" }}>ACCIONES</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>ORDEN</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>PRODUCTO</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>CANT.</TableCell>
+              <TableCell sx={{ fontWeight: 700 }}>SUBTOTAL</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 700 }}>ACCIONES</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -264,17 +248,11 @@ export default function DetallePedidoPage(): JSX.Element {
       </TableContainer>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-        <Pagination 
-          count={totalPages} 
-          page={page} 
-          onChange={(_, v) => setPage(v)} 
-          shape="rounded"
-          sx={{ '& .Mui-selected': { bgcolor: '#F55345 !important', color: 'white' } }}
-        />
+        <Pagination count={totalPages} page={page} onChange={(_, v) => setPage(v)} shape="rounded" sx={{ '& .Mui-selected': { bgcolor: '#F55345 !important', color: 'white' } }} />
       </Box>
 
       <DetallePedidoFormDialog open={open} mode={mode} initial={current} productos={productos} pedidos={pedidos} onClose={() => setOpen(false)} onSubmit={onSubmit} />
-      <ConfirmDialog open={confirmOpen} title="Quitar producto" description={`¿Eliminar "${toDelete?.producto?.nombre}" de la orden?`} onCancel={() => setConfirmOpen(false)} onConfirm={confirmDelete} />
+      <ConfirmDialog open={confirmOpen} title="Eliminar registro" description={`¿Quitar este ítem de la orden?`} onCancel={() => setConfirmOpen(false)} onConfirm={confirmDelete} />
     </Box>
   );
 }

@@ -28,6 +28,17 @@ import HistoryIcon from "@mui/icons-material/History";
 
 const drawerWidth = 260;
 
+interface RoleData {
+  id: number;
+  nombre: string;
+}
+
+interface UserWithRole {
+  username?: string;
+  email?: string;
+  rol?: RoleData;
+}
+
 type NavItem = {
   label: string;
   to: string;
@@ -52,8 +63,10 @@ export default function PrivateLayout(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const role = (user?.role || "USER").toUpperCase();
-  const visibleItems = navItems.filter((i) => 
+  const typedUser = user as UserWithRole;
+  const roleName = typedUser?.rol?.nombre || "UNDEFINED";
+  const role = roleName.toUpperCase();
+  const visibleItems = navItems.filter((i) =>
     !i.roles || i.roles.map((x) => x.toUpperCase()).includes(role)
   );
 

@@ -1,56 +1,60 @@
-import { api } from "./api.ts";
+import api from './api';
 
-export interface ProductoDto {
+export interface Producto {
   id: number;
   nombre: string;
-  descripcion: string;
   precio: number;
-  estado: boolean;
-  imagen?: string;
-  category?: {
+  categoryId?: number;
+  categoria?: {
     id: number;
     name: string;
   };
+  imageUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-interface PaginationMeta {
-  totalItems: number;
-  itemCount: number;
-  itemsPerPage: number;
-  totalPages: number;
-  currentPage: number;
-}
+export const getProductos = async (params?: { page?: number; limit?: number; search?: string }) => {
+  const { data } = await api.get('/productos', { params });
+  return data;
+};
 
-interface PaginationData {
-  items: ProductoDto[];
-  meta: PaginationMeta;
-}
+export const getProductoById = async (id: number) => {
+  const { data } = await api.get(`/productos/${id}`);
+  return data;
+};
 
-interface ApiResponse {
-  message: string;
-  data: PaginationData;
-}
-
-export const getPublicProducts = async (params: { q?: string; page?: number; limit?: number }) => {
-  const { data } = await api.get<ApiResponse>('/productos', {
-    params: {
-      search: params.q,
-      page: params.page,
-      limit: params.limit,
-      estado: 'true'
+export const createProducto = async (formData: FormData) => {
+  const { data } = await api.post('/productos', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
   });
   return data;
 };
 
+export const updateProducto = async (id: number, formData: FormData) => {
+  const { data } = await api.put(`/productos/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};
+
+export const deleteProducto = async (id: number) => {
+  const { data } = await api.delete(`/productos/${id}`);
+  return data;
+};
+
 export const getProductImageUrl = (imageName?: string) => {
-  if (!imageName) return "/images/plato-default.png"; // Imagen local si no hay foto
-
-  const baseUrl = api.defaults.baseURL || 'http://localhost:3000';
-
-  const cleanBaseUrl = typeof baseUrl === 'string' && baseUrl.endsWith('/')
-    ? baseUrl.slice(0, -1)
-    : baseUrl;
-
-  return `${cleanBaseUrl}/productos/${imageName}`;
+  if (!imageName) {
+    return "/images/plato-default.png";
+  }
+  if (imageName.startsWith('http')) {
+    return imageName;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  return `${cleanBaseUrl}/uploads/productos/${imageName}`;
 };

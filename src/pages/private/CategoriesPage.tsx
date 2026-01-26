@@ -1,15 +1,24 @@
-import { Alert, Button, CircularProgress, IconButton, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import {JSX, useEffect, useMemo, useState} from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  Alert, Button, IconButton, Pagination, Paper, Stack, Table,
+  TableBody, TableCell, TableContainer, TableHead, TableRow, TextField,
+  Typography, InputAdornment, Breadcrumbs, Link, Card, 
+  CardContent, Skeleton, Box, Avatar
+} from "@mui/material";
+import { type JSX, useEffect, useMemo, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import CategoryIcon from '@mui/icons-material/Category';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 import CategoryFormDialog from "../../components/categories/CategoryFormDialog";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import { useUi } from "../../context/UiContext";
 import { getApiErrorMessage } from "../../utils/getApiErrorMessage";
-import {type CategoryDto, createCategory, deleteCategory, getCategories, updateCategory } from "../../services/categories.service";
+import { type CategoryDto, createCategory, deleteCategory, getCategories, updateCategory } from "../../services/categories.service";
 
 function useDebouncedValue<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -22,6 +31,7 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
 
 export default function CategoriesPage(): JSX.Element {
   const { notify } = useUi();
+  const navigate = useNavigate();
   const [sp, setSp] = useSearchParams();
 
   const pageParam = Number(sp.get("page") || "1");
@@ -46,17 +56,14 @@ export default function CategoriesPage(): JSX.Element {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState<CategoryDto | null>(null);
 
-  const queryKey = useMemo(
-    () => ({
-      page,
-      limit,
-      search: debouncedSearch.trim() || undefined,
-      searchField: debouncedSearch.trim() ? "name" : undefined,
-      sort: "name",
-      order: "ASC" as const,
-    }),
-    [page, limit, debouncedSearch]
-  );
+  const queryKey = useMemo(() => ({
+    page,
+    limit,
+    search: debouncedSearch.trim() || undefined,
+    searchField: debouncedSearch.trim() ? "name" : undefined,
+    sort: "name",
+    order: "ASC" as const,
+  }), [page, limit, debouncedSearch]);
 
   useEffect(() => {
     setSp((prev) => {
@@ -110,14 +117,14 @@ export default function CategoriesPage(): JSX.Element {
         await createCategory(payload);
         setOpen(false);
         setPage(1);
-        notify({ message: "Categoría creada.", severity: "success" });
+        notify({ message: "Categoría creada", severity: "success" });
         await load();
         return;
       }
       if (!current) return;
       await updateCategory(current.id, payload);
       setOpen(false);
-      notify({ message: "Categoría actualizada.", severity: "success" });
+      notify({ message: "Categoría actualizada", severity: "success" });
       await load();
     } catch (e) {
       notify({ message: getApiErrorMessage(e), severity: "error" });
@@ -133,7 +140,7 @@ export default function CategoriesPage(): JSX.Element {
     if (!toDelete) return;
     try {
       await deleteCategory(toDelete.id);
-      notify({ message: "Categoría eliminada.", severity: "success" });
+      notify({ message: "Categoría eliminada", severity: "success" });
       setConfirmOpen(false);
       setToDelete(null);
       await load();
@@ -143,64 +150,133 @@ export default function CategoriesPage(): JSX.Element {
   };
 
   return (
-    <Stack spacing={2}>
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ sm: "center" }}>
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Categorías
-        </Typography>
+    <Box sx={{ p: 4, bgcolor: "#f9f9f9", minHeight: "100vh" }}>
+      <Box sx={{ mb: 4 }}>
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 1 }}>
+          <Link underline="hover" color="inherit" onClick={() => navigate("/dashboard")} sx={{ cursor: 'pointer', fontSize: 13 }}>
+            Dashboard
+          </Link>
+          <Typography color="text.primary" sx={{ fontWeight: 600, fontSize: 13 }}>Categorías</Typography>
+        </Breadcrumbs>
+        
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4" sx={{ fontWeight: 900, color: "#2d3436" }}>
+            Categorías
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={onCreate}
+            sx={{ 
+              bgcolor: "#F55345", 
+              "&:hover": { bgcolor: "#d44538" }, 
+              borderRadius: "12px", 
+              px: 3 
+            }}
+          >
+            Nueva Categoría
+          </Button>
+        </Stack>
+      </Box>
 
-        <Button variant="contained" startIcon={<AddIcon />} onClick={onCreate}>
-          Nueva
-        </Button>
-      </Stack>
+      <Box sx={{ display: "flex", gap: 3, mb: 4, flexWrap: "wrap" }}>
+        <Card variant="outlined" sx={{ flex: "1 1 300px", borderRadius: "16px", borderLeft: "6px solid #F55345" }}>
+          <CardContent>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Avatar sx={{ bgcolor: "rgba(245, 83, 69, 0.1)", color: "#F55345" }}>
+                <CategoryIcon />
+              </Avatar>
+              <Box>
+                <Typography variant="caption" color="text.secondary">Total Categorías</Typography>
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>{items.length}</Typography>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+        
+        <Card variant="outlined" sx={{ flex: "1 1 300px", borderRadius: "16px", borderLeft: "6px solid #2065D1" }}>
+          <CardContent>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Avatar sx={{ bgcolor: "rgba(32, 101, 209, 0.1)", color: "#2065D1" }}>
+                <ListAltIcon />
+              </Avatar>
+              <Box>
+                <Typography variant="caption" color="text.secondary">Estado</Typography>
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>Activas</Typography>
+              </Box>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
 
-      {error ? <Alert severity="error">{error}</Alert> : null}
+      <TextField
+        placeholder="Buscar categorías..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        fullWidth
+        sx={{ mb: 3 }}
+        InputProps={{
+          startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>),
+          sx: { borderRadius: "14px", bgcolor: "white" }
+        }}
+      />
 
-      <TextField label="Buscar (por nombre)" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth />
+      {error && <Alert severity="error" sx={{ mb: 3, borderRadius: "12px" }}>{error}</Alert>}
 
-      {loading ? (
-        <CircularProgress />
-      ) : items.length === 0 ? (
-        <Alert severity="info">No hay categorías para mostrar.</Alert>
-      ) : (
-        <>
-          <TableContainer component={Paper} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Nombre</TableCell>
-                  <TableCell align="right">Acciones</TableCell>
+      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: "16px", overflow: "hidden" }}>
+        <Table>
+          <TableHead sx={{ bgcolor: "#fcfcfc" }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>NOMBRE DE CATEGORÍA</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 700 }}>ACCIONES</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading ? (
+              [...Array(5)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={2}><Skeleton height={40} /></TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {items.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell>{c.name}</TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => onEdit(c)} aria-label="editar"><EditIcon /></IconButton>
-                      <IconButton onClick={() => askDelete(c)} aria-label="eliminar"><DeleteIcon /></IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              ))
+            ) : items.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={2} align="center" sx={{ py: 5 }}>
+                  <Typography color="text.secondary">No hay categorías disponibles.</Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              items.map((c) => (
+                <TableRow key={c.id} hover>
+                  <TableCell sx={{ fontWeight: 500 }}>{c.name}</TableCell>
+                  <TableCell align="right">
+                    <Stack direction="row" spacing={1} justifyContent="flex-end">
+                      <IconButton size="small" onClick={() => onEdit(c)} sx={{ color: "#F55345" }}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton size="small" onClick={() => askDelete(c)} color="error">
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-          <Stack direction="row" justifyContent="center" sx={{ py: 1 }}>
-            <Pagination count={totalPages} page={page} onChange={(_, v) => setPage(v)} />
-          </Stack>
-        </>
-      )}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Pagination 
+          count={totalPages} 
+          page={page} 
+          onChange={(_, v) => setPage(v)} 
+          shape="rounded"
+          sx={{ '& .Mui-selected': { bgcolor: '#F55345 !important', color: 'white' } }}
+        />
+      </Box>
 
       <CategoryFormDialog open={open} mode={mode} initial={current} onClose={() => setOpen(false)} onSubmit={onSubmit} />
-
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Confirmar eliminación"
-        description={`¿Eliminar la categoría "${toDelete?.name || ""}"?`}
-        onCancel={() => { setConfirmOpen(false); setToDelete(null); }}
-        onConfirm={confirmDelete}
-      />
-    </Stack>
+      <ConfirmDialog open={confirmOpen} title="Eliminar categoría" description={`¿Quitar la categoría "${toDelete?.name}"?`} onCancel={() => setConfirmOpen(false)} onConfirm={confirmDelete} />
+    </Box>
   );
 }

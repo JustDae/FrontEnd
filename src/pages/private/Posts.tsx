@@ -85,7 +85,10 @@ export default function Posts(): JSX.Element {
         open={open}
         onClose={() => setOpen(false)}
         onSaved={fetchPosts}
-        post={editando}
+        post={editando as any}
+        mode={editando ? "edit" : "create"}
+        categories={[]}
+        onSubmit={() => {}}
       />
     </Box>
   );

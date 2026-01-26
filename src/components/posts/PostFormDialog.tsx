@@ -21,6 +21,8 @@ type Props = {
   initial?: PostDto | null;
   categories: CategoryDto[];
   onClose: () => void;
+  onSaved?: () => void;
+  post: PostDto | null;
   onSubmit: (payload: { title: string; content: string; categoryId?: string | null }) => void;
 };
 

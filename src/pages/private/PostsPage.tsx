@@ -26,7 +26,7 @@ import { type PostDto, createPost, deletePost, getPosts, updatePost } from "../.
 import PostFormDialog from "../../components/posts/PostFormDialog";
 import { useCategoriesOptions } from "../../hooks/useCategoriesOptions";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
-import {type CategoryDto, deleteCategory} from "../../services/categories.service.ts";
+import {type CategoryDto} from "../../services/categories.service.ts";
 import {getApiErrorMessage} from "../../utils/getApiErrorMessage.ts";
 import {useUi} from "../../context/UiContext.tsx";
 
@@ -142,7 +142,7 @@ export default function PostsPage(): JSX.Element {
   };
 
   const askDelete = (c: CategoryDto) => {
-    setToDelete(c);
+    setToDelete(c as any);
     setConfirmOpen(true);
   };
 
@@ -215,7 +215,7 @@ export default function PostsPage(): JSX.Element {
                       <IconButton onClick={() => onEdit(p)} color="primary">
                         <EditIcon />
                       </IconButton>
-                      <IconButton onClick={() => askDelete(p)} aria-label="eliminar">
+                      <IconButton onClick={() => askDelete(p as any)} aria-label="eliminar">
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -242,6 +242,7 @@ export default function PostsPage(): JSX.Element {
         open={open}
         mode={mode}
         initial={current}
+        post={null}
         onClose={() => setOpen(false)}
         onSubmit={onSubmit} categories={[]}      />
 

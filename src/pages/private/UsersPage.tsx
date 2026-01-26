@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {JSX, useEffect, useMemo, useState} from "react";
+import { type JSX, useEffect, useMemo, useState} from "react";
 import { useSearchParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -121,7 +121,7 @@ export default function UsersPage(): JSX.Element {
           username: payload.username,
           email: payload.email,
           password: payload.password || "",
-          role: payload.role,
+          rolId: Number(payload.role),
         });
         setOpen(false);
         setPage(1);
@@ -132,7 +132,7 @@ export default function UsersPage(): JSX.Element {
       await updateUser(current.id, {
         username: payload.username,
         email: payload.email,
-        role: payload.role,
+        rolId: Number(payload.role),
       });
       setOpen(false);
       await load();
@@ -151,7 +151,7 @@ export default function UsersPage(): JSX.Element {
     }
   };
 
-  const roleLabel = (u: UserDto) => u.role || "USER";
+  const roleLabel = (u: UserDto) => u.rol?.nombre || "UNDEFINED";
 
   return (
     <Stack spacing={2}>

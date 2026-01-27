@@ -4,7 +4,7 @@ import {
   marcarLeida,
   type Notificacion,
 } from "../services/notificacion.service";
-import NotificacionItem from "../components/notificacion/NotificacionItem";
+import NotificacionItem from "../components/notificacion/NotificacionItemDialog";
 
 export default function NotificacionesPage() {
   const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);

@@ -1,0 +1,74 @@
+name: ⚛️ Deploy React to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Crear .env de producción
+        run: |
+          printf "%s" "${{ secrets.REACT_ENV }}" > .env.production
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar (Build)
+        run: npm run build
+
+      - name: Subir archivos al VPS (SCP)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          # Copiamos la carpeta dist completa a un temporal
+          source: "dist/"
+          target: "/tmp/react_build"
+
+      - name: Desplegar en Nginx (SSH)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            # Parar si hay errores
+            set -e
+            
+            echo "🚀 Iniciando despliegue..."
+            
+            # Asegurar que existe la carpeta destino
+            mkdir -p /var/www/restaurante-app
+            
+            # Limpiar versión anterior
+            rm -rf /var/www/restaurante-app/*
+            
+            # Mover los nuevos archivos (del temporal a producción)
+            # OJO: scp copia la carpeta 'dist' dentro de 'react_build'
+            cp -r /tmp/react_build/dist/* /var/www/restaurante-app/
+            
+            # Limpiar temporal
+            rm -rf /tmp/react_build
+            
+            # Ajustar permisos
+            chown -R www-data:www-data /var/www/restaurante-app
+            chmod -R 755 /var/www/restaurante-app
+            
+            # Recargar Nginx
+            nginx -t
+            systemctl reload nginx
+            
+            echo "✅ Despliegue completado."

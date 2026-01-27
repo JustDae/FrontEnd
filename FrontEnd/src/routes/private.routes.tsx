@@ -27,8 +27,8 @@ export const privateRoutes: RouteObject = {
     { path: "pedidos", element: <PedidosPage/>},
     { path: "audit-logs", element: <AuditLogsPage /> },
     { path: "menu", element: <PublicProducts/>},
-    { path: "mesas",  element: <MesaPage/>},
-    { path: "metodos-pago", element: <MetodoPagoPage/>},
+    { path: "mesa",  element: <MesaPage/>},
+    { path: "metodo-pago", element: <MetodoPagoPage/>},
     { path: "notificaciones", element: <NotificacionesPage/>},
     { path: "resenas", element: <ResenasPage /> },
     {

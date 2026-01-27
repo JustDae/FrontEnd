@@ -27,18 +27,23 @@ export function HomeCarousel() {
 
   return (
     <Box sx={{ 
-      width: '100%', 
+      width: '100vw',
       position: 'relative',
-     
+      left: '50%',
+      right: '50%',
+      marginLeft: '-50vw',
+      marginRight: '-50vw',
+      overflow: 'hidden',
       '& .swiper-pagination-bullet': {
-        backgroundColor: '#ccc',
-        opacity: 1,
+        backgroundColor: '#fff',
+        opacity: 0.5,
       },
       '& .swiper-pagination-bullet-active': {
         backgroundColor: brandColor,
-        width: '20px', 
+        width: '30px', 
         borderRadius: '4px',
-        transition: 'width 0.3s'
+        transition: 'width 0.3s',
+        opacity: 1
       }
     }}>
       <Swiper
@@ -46,14 +51,11 @@ export function HomeCarousel() {
         effect="fade"
         loop={true}
         autoplay={{
-          delay: 4000,
+          delay: 5000,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
-        navigation={false} 
-        style={{
-          paddingBottom: '30px' 
-        }}
+        style={{ width: '100%' }}
       >
         {items.map((item, i) => (
           <SwiperSlide key={i}>
@@ -74,12 +76,10 @@ function Item({ item }: any) {
       elevation={0}
       sx={{
         position: 'relative',
-        height: { xs: '350px', md: '500px' },
-        borderRadius: '16px',
+        height: { xs: '500px', md: '700px' },
+        borderRadius: 0,
         overflow: 'hidden',
-        mx: { xs: 0, md: 1 },
-        mt: 1,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+        width: '100%'
       }}
     >
       <Box
@@ -90,7 +90,7 @@ function Item({ item }: any) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          filter: 'brightness(0.65)' 
+          filter: 'brightness(0.5)'
         }}
       />
 
@@ -98,45 +98,65 @@ function Item({ item }: any) {
         sx={{
           position: 'absolute',
           top: '50%',
-          left: { xs: '5%', md: '8%' },
-          transform: 'translateY(-50%)',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           color: 'white',
-          maxWidth: '500px',
-          textAlign: 'left',
+          width: '90%',
+          maxWidth: '1000px',
+          textAlign: 'center',
           zIndex: 10
         }}
       >
         <Typography
-          variant="h3"
+          variant="h1"
           sx={{
-            fontWeight: 800,
-            mb: 1,
-            fontSize: { xs: '1.8rem', md: '3rem' },
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            fontWeight: 950,
+            mb: 2,
+            fontSize: { xs: '2.5rem', md: '5rem' },
+            textShadow: '0 10px 30px rgba(0,0,0,0.5)',
+            letterSpacing: '-2px',
+            lineHeight: 1
           }}
         >
           {item.name}
         </Typography>
-        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
+        
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            mb: 6, 
+            opacity: 0.9, 
+            fontSize: { xs: '1.1rem', md: '1.8rem' },
+            textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+            fontWeight: 400,
+            maxWidth: '700px',
+            mx: 'auto'
+          }}
+        >
           {item.description}
         </Typography>
 
         <Button
           variant="contained"
-          size="large"
           onClick={() => navigate(item.link)}
           sx={{
             bgcolor: brandColor,
-            fontWeight: 600,
-            borderRadius: '10px',
+            fontWeight: 900,
+            borderRadius: '50px',
             textTransform: 'none',
-            px: 4,
-            py: 1.2,
-            boxShadow: `0 4px 14px ${brandColor}66`,
-            '&:hover': { bgcolor: '#d44336' }
+            px: { xs: 4, md: 8 },
+            py: { xs: 1.5, md: 2.5 },
+            fontSize: { xs: '1rem', md: '1.2rem' },
+            boxShadow: `0 15px 35px ${brandColor}55`,
+            '&:hover': { 
+              bgcolor: '#d44336',
+              transform: 'translateY(-5px)',
+              boxShadow: `0 20px 45px ${brandColor}77`,
+            },
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           }}
         >
-          Ver Menú
+          Explorar Menú
         </Button> 
       </Box>
     </Paper>

@@ -1,4 +1,4 @@
-import MetodoPagoForm from "../components/metodoPago/MetodoPagoForm";
+import MetodoPagoForm from "../components/metodoPago/MetodoPagoFormDialog";
 
 export default function MetodoPagoPage() {
   return (

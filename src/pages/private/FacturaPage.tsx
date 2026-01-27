@@ -1,5 +1,5 @@
-import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Chip } from "@mui/material";
-import { Visibility, Print, ReceiptLong } from "@mui/icons-material";
+import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from "@mui/material";
+import { Visibility, Print } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getFacturas } from "../../services/factura.service";
 

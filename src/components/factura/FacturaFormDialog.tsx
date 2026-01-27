@@ -24,7 +24,7 @@ export default function FacturaFormDialog({ open, pedido, onClose, onSubmit }: a
               Facturando Pedido: #{pedido?.id?.substring(0,8)}...
             </Typography>
             <Typography variant="h6">Total a Pagar: ${pedido?.total}</Typography>
-            <TextField label="Nombre / Razón Social" fullWidth required value={razonSocial} onChange={(e) => setNombre(e.target.value)} />
+            <TextField label="Nombre / Razón Social" fullWidth required value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} />
             <TextField label="RUC / Cédula" fullWidth required value={identificacion} onChange={(e) => setIdentificacion(e.target.value)} />
           </Stack>
         </DialogContent>

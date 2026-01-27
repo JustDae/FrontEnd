@@ -3,7 +3,7 @@ import {
   Box, Typography, Button, Paper, Stack, Grid, Chip, Avatar
 } from "@mui/material";
 import {
-  Edit, Store, Phone, LocationOn, Receipt, Assignment, Info
+  Edit, Store, Phone, LocationOn, Receipt, Assignment
 } from "@mui/icons-material";
 import { useUi } from "../../context/UiContext";
 import {
@@ -140,13 +140,13 @@ export default function RestaurantePage(): JSX.Element {
 
           <Box sx={{ p: 5 }}>
             <Grid container spacing={5}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs:12, md:6 }}>
                  <Stack spacing={4}>
                     <InfoBox icon={<Assignment />} label="RUC / Identificación" value={restaurante.ruc} />
                     <InfoBox icon={<LocationOn />} label="Dirección Física" value={restaurante.direccion} />
                  </Stack>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs:12, md:6 }}>
                  <Stack spacing={4}>
                     <InfoBox icon={<Phone />} label="Teléfono de Contacto" value={restaurante.telefono} />
                     <Stack direction="row" spacing={2} alignItems="center">

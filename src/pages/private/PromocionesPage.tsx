@@ -3,7 +3,7 @@ import {
   Box, Typography, Button, Grid, Card, CardContent,
   IconButton, Chip, Stack, Divider
 } from "@mui/material";
-import { LocalOffer, Delete, Add, Event, ConfirmationNumber } from "@mui/icons-material";
+import { Delete, Add, Event, ConfirmationNumber } from "@mui/icons-material";
 import { useUi } from "../../context/UiContext";
 import { getPromociones, deletePromocion, createPromocion, type Promocion } from "../../services/promocion.service";
 import PromocionFormDialog from "../../components/promociones/PromocionFormDialog";
@@ -69,7 +69,7 @@ export default function PromocionesPage(): JSX.Element {
 
       <Grid container spacing={3}>
         {promos.map((promo) => (
-          <Grid item xs={12} sm={6} md={4} key={promo._id}>
+          <Grid key={promo._id} size={{ xs:12, sm:6, md:4 }} >
             <Card sx={{ borderRadius: "16px", position: "relative", overflow: "visible" }}>
               {/* Listón de Descuento */}
               <Box sx={{

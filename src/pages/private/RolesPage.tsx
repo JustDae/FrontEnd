@@ -5,7 +5,7 @@ import {
   Stack, IconButton, Tooltip, Divider, Chip
 } from "@mui/material";
 import {
-  NavigateNext, Add, Edit, Delete, Security, VerifiedUser
+  NavigateNext, Add, Edit, Delete, Security
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useUi } from "../../context/UiContext";

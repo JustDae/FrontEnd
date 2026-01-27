@@ -1,7 +1,6 @@
 import type { RouteObject } from "react-router-dom";
 import DashboardHome from "../pages/private/DashboardHome";
 import CategoriesPage from "../pages/private/CategoriesPage";
-import PostsPage from "../pages/private/PostsPage";
 import DetallePedido from "../pages/private/DetallePedido";
 import UsersPage from "../pages/private/UsersPage";
 import Forbidden from "../pages/private/Forbidden";
@@ -21,8 +20,7 @@ export const privateRoutes: RouteObject = {
     { index: true, element: <DashboardHome /> },
     { path: "categories", element: <CategoriesPage /> },
     { path: "productos", element: <ProductosPage /> },
-    { path: "posts", element: <PostsPage /> },
-    { path: "detalle-pedido/:id?", element: <DetallePedido /> }, 
+    { path: "detalle-pedido/:id?", element: <DetallePedido /> },
     { path: "forbidden", element: <Forbidden /> },
     { path: "pedidos", element: <PedidosPage/>},
     { path: "audit-logs", element: <AuditLogsPage /> },

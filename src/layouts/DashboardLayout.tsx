@@ -28,7 +28,6 @@ const menuItems: MenuItemType[] = [
   { text: "Usuarios", path: "/dashboard/users" },
   { text: "Roles", path: "/dashboard/roles" },
   { text: "Restaurante", path: "/dashboard/restaurante"},
-  { text: "Posts", path: "/dashboard/posts" },
   { text: "Promociones", path: "/dashboard/promociones" },
   { text: "Facturación", path: "/dashboard/facturas" },
 ];

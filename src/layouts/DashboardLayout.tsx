@@ -26,6 +26,8 @@ const menuItems: MenuItemType[] = [
   { text: "Categorías", path: "/dashboard/categories" },
   { text: "Detalle Pedido", path: "/dashboard/detalle-pedido" },
   { text: "Usuarios", path: "/dashboard/users" },
+  { text: "Roles", path: "/dashboard/roles" },
+  { text: "Restaurante", path: "/dashboard/restaurante"},
   { text: "Posts", path: "/dashboard/posts" },
 ];
 

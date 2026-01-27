@@ -10,6 +10,8 @@ import PedidosPage from "../pages/private/PedidosPage";
 import PublicProducts from "../pages/public/PublicProducts";
 import ProductosPage from "../pages/private/ProductosPage";
 import AuditLogsPage from "../pages/private/AuditLogsPage";
+import RolesPage from "../pages/private/RolesPage";
+import RestaurantePage from "../pages/private/RestaurantePage";
 
 export const privateRoutes: RouteObject = {
   path: "/dashboard",
@@ -28,6 +30,22 @@ export const privateRoutes: RouteObject = {
       element: (
         <RequireRole allow={["ADMIN"]}>
           <UsersPage />
+        </RequireRole>
+      ),
+    },
+    {
+      path: "roles",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <RolesPage />
+        </RequireRole>
+      ),
+    },
+    {
+      path: "restaurante",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <RestaurantePage />
         </RequireRole>
       ),
     },

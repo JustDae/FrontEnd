@@ -1,22 +1,82 @@
-import type { Notificacion } from "../../services/notificacion.service";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { useEffect, useState, type JSX } from "react";
 
-interface Props {
-  data: Notificacion;
-  onLeer: (id: number) => void;
-}
+type Props = {
+  open: boolean;
+  mode: "create" | "edit";
+  initial?: any | null;
+  onClose: () => void;
+  onSubmit: (payload: any) => void;
+};
 
-export default function NotificacionItem({ data, onLeer }: Props) {
+export default function NotificacionFormDialog({
+  open,
+  mode,
+  initial,
+  onClose,
+  onSubmit,
+}: Props): JSX.Element {
+  const [titulo, setTitulo] = useState("");
+  const [mensaje, setMensaje] = useState("");
+
+  useEffect(() => {
+    if (open) {
+      setTitulo(initial?.titulo || "");
+      setMensaje(initial?.mensaje || "");
+    }
+  }, [open, initial]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ titulo, mensaje });
+  };
+
   return (
-    <div style={{ border: "1px solid #ccc", marginBottom: "8px", padding: "8px" }}>
-      <h4>{data.titulo}</h4>
-      <p>{data.mensaje}</p>
-      <small>{data.tipo}</small>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle>
+        {mode === "create" ? "Nueva Notificación" : "Editar Notificación"}
+      </DialogTitle>
 
-      {!data.leida && (
-        <button onClick={() => onLeer(data.id!)}>
-          Marcar como leída
-        </button>
-      )}
-    </div>
+      <DialogContent>
+        <Stack
+          spacing={3}
+          component="form"
+          id="notificacion-form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 2 }}
+        >
+          <TextField
+            label="Título"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Mensaje"
+            value={mensaje}
+            onChange={(e) => setMensaje(e.target.value)}
+            fullWidth
+            multiline
+            rows={3}
+          />
+        </Stack>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose}>Cancelar</Button>
+        <Button type="submit" form="notificacion-form" variant="contained">
+          Guardar
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

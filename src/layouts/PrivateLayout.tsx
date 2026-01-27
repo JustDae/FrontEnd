@@ -19,12 +19,14 @@ import { useAuth } from "../context/AuthContext";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CategoryIcon from "@mui/icons-material/Category";
-import ArticleIcon from "@mui/icons-material/Article";
 import GroupIcon from "@mui/icons-material/Group";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import FastfoodIcon from "@mui/icons-material/Fastfood"; 
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import HistoryIcon from "@mui/icons-material/History";
+import SecurityIcon from '@mui/icons-material/Security';
+import StoreIcon from '@mui/icons-material/Store';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const drawerWidth = 260;
 
@@ -53,8 +55,11 @@ const navItems: NavItem[] = [
   { label: "Pedidos", to: "/dashboard/pedidos", icon: <ListAltIcon /> },
   { label: "Detalle Pedido", to: "/dashboard/detalle-pedido", icon: <ReceiptLongIcon /> },
   { label: "Auditoría", to: "/dashboard/audit-logs", icon: <HistoryIcon /> },
-  { label: "Posts", to: "/dashboard/posts", icon: <ArticleIcon /> },
   { label: "Users", to: "/dashboard/users", icon: <GroupIcon />, roles: ["ADMIN"] },
+  { label: "Roles", to: "/dashboard/roles", icon: <SecurityIcon />, roles: ["ADMIN"] },
+  { label: "Restaurante", to: "/dashboard/restaurante", icon: <StoreIcon />, roles: ["ADMIN"] },
+  { label: "Promociones", to: "/dashboard/promociones", icon: <LocalOfferIcon />, roles: ["ADMIN"] },
+  { label: "Facturación", to: "/dashboard/facturas", icon: <ReceiptLongIcon />, roles: ["ADMIN"] },
 ];
 
 export default function PrivateLayout(): JSX.Element {

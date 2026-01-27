@@ -20,7 +20,7 @@ interface Producto {
   nombre: string;
   precio: number;
   imageUrl?: string;
-  categoria?: { id: number; nombre?: string; name?: string };
+  category?: { id: number; nombre?: string; name?: string };
 }
 
 const styles = {
@@ -204,7 +204,7 @@ export default function ProductosPage(): JSX.Element {
                     </Stack>
 
                     <Chip 
-                      label={prod.categoria?.nombre || prod.categoria?.name || "General"} 
+                      label={prod.category?.nombre || prod.category?.name || "General"} 
                       size="small" 
                       sx={{ fontSize: "0.65rem", fontWeight: 700, height: 20, bgcolor: "#f1f5f9", mb: 2 }} 
                     />

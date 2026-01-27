@@ -13,6 +13,7 @@ import AuditLogsPage from "../pages/private/AuditLogsPage";
 import RolesPage from "../pages/private/RolesPage";
 import RestaurantePage from "../pages/private/RestaurantePage";
 import PromocionesPage from "../pages/private/PromocionesPage";
+import FacturaPage from "../pages/private/FacturaPage.tsx";
 
 export const privateRoutes: RouteObject = {
   path: "/dashboard",
@@ -55,6 +56,14 @@ export const privateRoutes: RouteObject = {
       element: (
         <RequireRole allow={["ADMIN"]}>
           <PromocionesPage />
+        </RequireRole>
+      ),
+    },
+    {
+      path: "facturas",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <FacturaPage />
         </RequireRole>
       ),
     },

@@ -30,6 +30,7 @@ const menuItems: MenuItemType[] = [
   { text: "Restaurante", path: "/dashboard/restaurante"},
   { text: "Posts", path: "/dashboard/posts" },
   { text: "Promociones", path: "/dashboard/promociones" },
+  { text: "Facturación", path: "/dashboard/facturas" },
 ];
 
 export default function DashboardLayout(): JSX.Element {

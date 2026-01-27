@@ -1,4 +1,4 @@
-import ResenaForm from "../components/resena/ResenaForm";
+import ResenaForm from "../components/resena/ResenaFormDialog";
 
 export default function ResenasPage() {
   return (

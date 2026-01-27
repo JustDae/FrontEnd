@@ -27,21 +27,18 @@ export function HomeCarousel() {
 
   return (
     <Box sx={{ 
-      width: '100%',
-      maxWidth: '1200px',
-      mx: 'auto',
+      width: '100%', 
       position: 'relative',
-      overflow: 'hidden',
+     
       '& .swiper-pagination-bullet': {
         backgroundColor: '#ccc',
-        opacity: 0.6,
+        opacity: 1,
       },
       '& .swiper-pagination-bullet-active': {
         backgroundColor: brandColor,
         width: '20px', 
         borderRadius: '4px',
-        transition: 'width 0.3s',
-        opacity: 1
+        transition: 'width 0.3s'
       }
     }}>
       <Swiper
@@ -49,11 +46,14 @@ export function HomeCarousel() {
         effect="fade"
         loop={true}
         autoplay={{
-          delay: 5000,
+          delay: 4000,
           disableOnInteraction: false,
         }}
         pagination={{ clickable: true }}
-        style={{ width: '100%', paddingBottom: '40px' }}
+        navigation={false} 
+        style={{
+          paddingBottom: '30px' 
+        }}
       >
         {items.map((item, i) => (
           <SwiperSlide key={i}>
@@ -74,11 +74,12 @@ function Item({ item }: any) {
       elevation={0}
       sx={{
         position: 'relative',
-        height: { xs: '300px', md: '400px' },
-        borderRadius: '24px',
+        height: { xs: '350px', md: '500px' },
+        borderRadius: '16px',
         overflow: 'hidden',
-        width: '100%',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+        mx: { xs: 0, md: 1 },
+        mt: 1,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
       }}
     >
       <Box
@@ -89,7 +90,7 @@ function Item({ item }: any) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          filter: 'brightness(0.6)'
+          filter: 'brightness(0.65)' 
         }}
       />
 
@@ -97,10 +98,9 @@ function Item({ item }: any) {
         sx={{
           position: 'absolute',
           top: '50%',
-          left: { xs: '10%', md: '8%' },
+          left: { xs: '5%', md: '8%' },
           transform: 'translateY(-50%)',
           color: 'white',
-          width: '80%',
           maxWidth: '500px',
           textAlign: 'left',
           zIndex: 10
@@ -111,44 +111,29 @@ function Item({ item }: any) {
           sx={{
             fontWeight: 800,
             mb: 1,
-            fontSize: { xs: '1.5rem', md: '2.5rem' },
-            textShadow: '0 4px 10px rgba(0,0,0,0.3)',
-            lineHeight: 1.2
+            fontSize: { xs: '1.8rem', md: '3rem' },
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
           }}
         >
           {item.name}
         </Typography>
-        
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            mb: 3, 
-            opacity: 0.9, 
-            fontSize: { xs: '0.875rem', md: '1.1rem' },
-            textShadow: '0 2px 5px rgba(0,0,0,0.3)',
-            fontWeight: 400
-          }}
-        >
+        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
           {item.description}
         </Typography>
 
         <Button
           variant="contained"
+          size="large"
           onClick={() => navigate(item.link)}
           sx={{
             bgcolor: brandColor,
-            fontWeight: 700,
-            borderRadius: '12px',
+            fontWeight: 600,
+            borderRadius: '10px',
             textTransform: 'none',
             px: 4,
-            py: 1,
-            fontSize: '0.9rem',
-            boxShadow: `0 8px 20px ${brandColor}44`,
-            '&:hover': { 
-              bgcolor: '#d44336',
-              transform: 'translateY(-2px)',
-            },
-            transition: 'all 0.3s ease'
+            py: 1.2,
+            boxShadow: `0 4px 14px ${brandColor}66`,
+            '&:hover': { bgcolor: '#d44336' }
           }}
         >
           Ver Menú

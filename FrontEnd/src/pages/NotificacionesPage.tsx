@@ -1,38 +1,67 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback, type JSX } from "react";
 import {
-  getNotificaciones,
-  marcarLeida,
-  type Notificacion,
-} from "../services/notificacion.service";
-import NotificacionItem from "../components/notificacion/NotificacionItemDialog";
+  Box, Typography, Container, Card, CardContent, Stack,
+  IconButton, Tooltip, Skeleton
+} from "@mui/material";
+import { Done } from "@mui/icons-material";
+import api from "../services/api";
+import { useUi } from "../context/UiContext";
 
-export default function NotificacionesPage() {
-  const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
+interface Notificacion {
+  id: number;
+  titulo: string;
+  mensaje: string;
+  leida: boolean;
+}
 
-  useEffect(() => {
-    getNotificaciones().then(res => setNotificaciones(res.data));
-  }, []);
+export default function NotificacionesPage(): JSX.Element {
+  const { notify } = useUi();
+  const [items, setItems] = useState<Notificacion[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleLeer = async (id: number) => {
-    await marcarLeida(id);
-    setNotificaciones(
-      notificaciones.map(n =>
-        n.id === id ? { ...n, leida: true } : n
-      )
-    );
+  const fetchItems = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await api.get("/notificaciones");
+      setItems(res.data || []);
+    } catch {
+      notify({ message: "Error de conexión", severity: "error" });
+    } finally {
+      setLoading(false);
+    }
+  }, [notify]);
+
+  useEffect(() => { fetchItems(); }, [fetchItems]);
+
+  const marcarLeida = async (id: number) => {
+    await api.put(`/notificaciones/${id}/leer`);
+    fetchItems();
   };
 
   return (
-    <>
-      <h1>Notificaciones</h1>
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" fontWeight={800} mb={3}>Notificaciones</Typography>
 
-      {notificaciones.map(n => (
-        <NotificacionItem
-          key={n.id}
-          data={n}
-          onLeer={handleLeer}
-        />
+      {loading ? <Skeleton height={120} /> : items.map(n => (
+        <Card key={n.id} sx={{ mb: 2, opacity: n.leida ? 0.6 : 1 }}>
+          <CardContent>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Box>
+                <Typography fontWeight={700}>{n.titulo}</Typography>
+                <Typography color="text.secondary">{n.mensaje}</Typography>
+              </Box>
+
+              {!n.leida && (
+                <Tooltip title="Marcar como leída">
+                  <IconButton onClick={() => marcarLeida(n.id)}>
+                    <Done />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Stack>
+          </CardContent>
+        </Card>
       ))}
-    </>
+    </Container>
   );
 }

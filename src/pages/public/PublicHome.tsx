@@ -24,7 +24,7 @@ const brandColor = '#F55345';
 const styles = {
   container: { minHeight: '100vh', bgcolor: '#f8fafc', pb: 10 },
   searchBar: {
-    maxWidth: 700,
+    maxWidth: 600,
     mx: 'auto',
     '& .MuiOutlinedInput-root': {
       borderRadius: '50px',
@@ -105,13 +105,13 @@ export default function PublicHome(): JSX.Element {
 
   return (
     <Box sx={styles.container}>
-      <Container maxWidth="xl" sx={{ mt: 2, mb: 6 }}>
+      <Container maxWidth="lg" sx={{ mt: 2, mb: 6 }}>
         <Box sx={{ borderRadius: '40px', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
           <HomeCarousel />
         </Box>
       </Container>
 
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Box sx={{ mb: 8, textAlign: 'center' }}>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mb: 2 }}>
             <Avatar sx={{ bgcolor: `${brandColor}15`, color: brandColor }}>

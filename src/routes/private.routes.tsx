@@ -62,7 +62,7 @@ export const privateRoutes: RouteObject = {
         <RequireRole allow={["ADMIN"]}>
           <FacturaPage />
         </RequireRole>
-        );
+        ),
     },
     {
       path: "categories",

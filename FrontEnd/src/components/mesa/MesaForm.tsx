@@ -1,30 +1,90 @@
-import { useState } from "react";
-import { createMesa } from "../../services/mesa.service";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { useEffect, useState, type JSX } from "react";
 
-export default function MesaForm() {
-  const [mesa, setMesa] = useState({
-    numeroMesa: "",
-    capacidad: 0,
-    estado: "DISPONIBLE",
-    ubicacion: "",
-  });
+type Props = {
+  open: boolean;
+  mode: "create" | "edit";
+  initial?: any | null;
+  onClose: () => void;
+  onSubmit: (payload: any) => void;
+};
 
-  const handleChange = (e: any) => {
-    setMesa({ ...mesa, [e.target.name]: e.target.value });
-  };
+export default function MesaFormDialog({
+  open,
+  mode,
+  initial,
+  onClose,
+  onSubmit,
+}: Props): JSX.Element {
+  const [numeroMesa, setNumeroMesa] = useState("");
+  const [capacidad, setCapacidad] = useState<number | string>("");
+  const [ubicacion, setUbicacion] = useState("");
 
-  const handleSubmit = async (e: any) => {
+  useEffect(() => {
+    if (open) {
+      setNumeroMesa(initial?.numeroMesa || "");
+      setCapacidad(initial?.capacidad || "");
+      setUbicacion(initial?.ubicacion || "");
+    }
+  }, [open, initial]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    await createMesa(mesa);
-    alert("Mesa creada");
+    onSubmit({ numeroMesa, capacidad, ubicacion });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="numeroMesa" placeholder="Número de mesa" onChange={handleChange} />
-      <input name="capacidad" type="number" placeholder="Capacidad" onChange={handleChange} />
-      <input name="ubicacion" placeholder="Ubicación" onChange={handleChange} />
-      <button type="submit">Guardar</button>
-    </form>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle>
+        {mode === "create" ? "Nueva Mesa" : "Editar Mesa"}
+      </DialogTitle>
+
+      <DialogContent>
+        <Stack
+          spacing={3}
+          component="form"
+          id="mesa-form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 2 }}
+        >
+          <TextField
+            label="Número de mesa"
+            value={numeroMesa}
+            onChange={(e) => setNumeroMesa(e.target.value)}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Capacidad"
+            type="number"
+            value={capacidad}
+            onChange={(e) => setCapacidad(e.target.value)}
+            fullWidth
+            required
+          />
+          <TextField
+            label="Ubicación"
+            value={ubicacion}
+            onChange={(e) => setUbicacion(e.target.value)}
+            fullWidth
+          />
+        </Stack>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose}>Cancelar</Button>
+        <Button type="submit" form="mesa-form" variant="contained">
+          Guardar
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

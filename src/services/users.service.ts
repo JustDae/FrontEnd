@@ -1,80 +1,70 @@
-import { api } from "./api";
+import api from './api';
 
-export type SuccessResponseDto<T = any> = {
-  success: true;
-  message: string;
-  data: T;
-};
-
-export type PaginateMeta = {
-  itemCount: number;
-  totalItems: number;
-  itemsPerPage: number;
-  totalPages: number;
-  currentPage: number;
-};
-
-export type PaginateLinks = {
-  first?: string;
-  previous?: string;
-  next?: string;
-  last?: string;
-};
-
-export type PaginationDto<T> = {
-  items: T[];
-  meta: PaginateMeta;
-  links?: PaginateLinks;
-};
-
-export type UserDto = {
+export interface User {
   id: string;
   username: string;
-  email?: string;
-  rol?: { id: number; nombre: string };
+  email: string;
+  rol?: {
+    id: number;
+    nombre: string;
+  };
+  profile?: string;
+  isActive?: boolean;
+}
+
+export interface Rol {
+  id: number;
+  nombre: string;
+}
+
+export const getUsers = async (params?: { page?: number; limit?: number; search?: string }) => {
+  const { data } = await api.get('/users', { params });
+  return data;
 };
 
-export async function getUsers(params?: {
-  page?: number;
-  limit?: number;
-  search?: string;
-  searchField?: string;
-  sort?: string;
-  order?: "ASC" | "DESC";
-}): Promise<PaginationDto<UserDto>> {
-  const { data } = await api.get<SuccessResponseDto<PaginationDto<UserDto>>>("/users", {
-    params: {
-      page: params?.page ?? 1,
-      limit: params?.limit ?? 10,
-      search: params?.search || undefined,
-      searchField: params?.searchField || undefined,
-      sort: params?.sort || undefined,
-      order: params?.order || undefined,
+export const createUser = async (formData: FormData) => {
+  const { data } = await api.post('/auth/register', formData);
+  return data;
+};
+
+export const updateUser = async (id: string, data: any) => {
+  const { data: res } = await api.put(`/users/${id}`, data);
+  return res;
+};
+
+export const deleteUser = async (id: string) => {
+  const { data } = await api.delete(`/users/${id}`);
+  return data;
+};
+
+export const getRoles = async () => {
+  const { data } = await api.get('/rol');
+
+  if (data?.data?.items && Array.isArray(data.data.items)) {
+    return data.data.items;
+  }
+
+  if (Array.isArray(data)) return data;
+  if (data?.items && Array.isArray(data.items)) return data.items;
+
+  return [];
+};
+
+export const getUserImageUrl = (imageName?: string) => {
+  if (!imageName) return undefined;
+  if (imageName.startsWith('http')) return imageName;
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  return `${baseUrl}/profile/${imageName}`;
+};
+
+export const uploadUserProfile = async (id: string, file: File) => {
+  const formData = new FormData();
+  formData.append("profile", file);
+
+  const { data } = await api.put(`/users/${id}/profile`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
   });
-  return data.data;
-}
-
-export async function createUser(payload: {
-  username: string;
-  email: string;
-  password: string;
-  rolId: number;
-}): Promise<UserDto> {
-  const { data } = await api.post<SuccessResponseDto<UserDto>>("/users", payload);
-  return data.data;
-}
-
-export async function updateUser(id: string, payload: {
-  username: string;
-  email: string;
-  rolId?: number;
-}): Promise<UserDto> {
-  const { data } = await api.put<SuccessResponseDto<UserDto>>(`/users/${id}`, payload);
-  return data.data;
-}
-
-export async function deleteUser(id: string): Promise<UserDto> {
-  const { data } = await api.delete<SuccessResponseDto<UserDto>>(`/users/${id}`);
-  return data.data;
-}
+  return data;
+};

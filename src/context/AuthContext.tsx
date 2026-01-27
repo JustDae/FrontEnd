@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     persistAuth(token, { username: payload.username });
   };
 
-  const register = async (payload: { username: string; email: string; password: string; rolId: number }) => {
+  const register = async (payload: { username: string; email: string; password: string }) => {
     const token = await registerApi(payload);
     persistAuth(token, { username: payload.username, email: payload.email });
   };

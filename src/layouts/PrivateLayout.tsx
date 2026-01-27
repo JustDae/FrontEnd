@@ -48,7 +48,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "Inicio", to: "/dashboard", icon: <DashboardIcon /> },
-  { label: "Categorías", to: "/dashboard/categories", icon: <CategoryIcon /> },
+  { label: "Categorías", to: "/dashboard/categories", icon: <CategoryIcon />, roles: ["ADMIN"] },
   { label: "Productos", to: "/dashboard/productos", icon: <FastfoodIcon /> },
   { label: "Pedidos", to: "/dashboard/pedidos", icon: <ListAltIcon /> },
   { label: "Detalle Pedido", to: "/dashboard/detalle-pedido", icon: <ReceiptLongIcon /> },

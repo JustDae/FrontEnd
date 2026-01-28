@@ -106,7 +106,7 @@ export default function PublicHome(): JSX.Element {
   }, [q, page, setSp]);
 
   return (
-    <Box sx={styles.container}>
+    <Box id="home" sx={styles.container}>
       <Box sx={{ width: '100%', mb: { xs: 4, md: 6 } }}>
         <Box sx={{ 
           width: '100%', 
@@ -118,7 +118,14 @@ export default function PublicHome(): JSX.Element {
         </Box>
       </Box>
 
-      <Container maxWidth={false} sx={{ px: { xs: 2, sm: 4, md: 6, lg: 10 } }}>
+      <Container 
+        id="menu" 
+        maxWidth={false} 
+        sx={{ 
+          px: { xs: 2, sm: 4, md: 6, lg: 10 },
+          scrollMarginTop: '100px'
+        }}
+      >
         <Box sx={{ mb: { xs: 4, md: 6 }, textAlign: 'center' }}>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
             <Avatar sx={{ width: { xs: 28, md: 32 }, height: { xs: 28, md: 32 }, bgcolor: alpha(brandColor, 0.1), color: brandColor }}>

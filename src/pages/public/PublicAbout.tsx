@@ -24,9 +24,9 @@ export default function PublicAbout(): JSX.Element {
   ];
 
   return (
-    <Box sx={{ bgcolor: 'white', pt: { xs: 8, md: 12 }, pb: 10 }}>
+    <Box sx={{ bgcolor: 'white', pt: { xs: 2, md: 4 }, pb: 10 }}>
       <Container maxWidth="lg">
-        <Stack spacing={10}>
+        <Stack spacing={8}>
           
           <Box sx={{ textAlign: 'center' }}>
             <Typography 

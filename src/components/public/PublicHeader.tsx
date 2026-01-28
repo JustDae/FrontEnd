@@ -1,20 +1,5 @@
 import { 
-  AppBar, 
-  Box, 
-  Button, 
-  Toolbar, 
-  Typography, 
-  Container, 
-  alpha, 
-  styled,
-  Stack,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  type ButtonProps 
+  AppBar, Box, Button, Toolbar, Typography, Container, alpha, styled, Stack, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, type ButtonProps 
 } from "@mui/material";
 import { useState } from "react";
 import type { JSX } from "react";
@@ -77,10 +62,24 @@ export default function PublicHeader(): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
-    { label: 'Inicio', path: '/' },
-    { label: 'Menú', path: '/menu' },
+    { label: 'Inicio', path: '/#home' },
+    { label: 'Menú', path: '/#menu' },
     { label: 'Nosotros', path: '/about' },
   ];
+
+  const handleNavClick = (e: React.MouseEvent, path: string) => {
+    if (path.includes('#')) {
+      const id = path.split('#')[1];
+      if (location.pathname === '/') {
+        e.preventDefault();
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      setMobileOpen(false);
+    }
+  };
 
   return (
     <StyledAppBar position="fixed" elevation={0}>
@@ -137,8 +136,9 @@ export default function PublicHeader(): JSX.Element {
               <NavButton 
                 key={item.path}
                 component={RouterLink} 
-                to={item.path} 
-                active={location.pathname === item.path}
+                to={item.path}
+                active={location.pathname === '/' && (location.hash === '' || item.path.includes(location.hash))}
+                onClick={(e) => handleNavClick(e, item.path)}
               >
                 {item.label}
               </NavButton>
@@ -180,8 +180,8 @@ export default function PublicHeader(): JSX.Element {
                 <ListItemButton 
                   component={RouterLink} 
                   to={item.path}
-                  onClick={() => setMobileOpen(false)}
-                  selected={location.pathname === item.path}
+                  onClick={(e) => handleNavClick(e, item.path)}
+                  selected={location.pathname === '/' && (location.hash === '' || item.path.includes(location.hash))}
                   sx={{ 
                     borderRadius: 3, 
                     mb: 1,

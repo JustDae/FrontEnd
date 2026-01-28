@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import PublicHeader from "../components/public/PublicHeader";
 import PublicFooter from "../components/public/PublicFooter";
 import ScrollToHash from "./ScrollToHash";
-import type { JSX } from "react/jsx-runtime";
+import type { JSX } from "react";
 
 export default function PublicLayout(): JSX.Element {
   return (
@@ -21,7 +21,7 @@ export default function PublicLayout(): JSX.Element {
 
       <Toolbar />
 
-      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
+      <Box component="main" sx={{ flexGrow: 1, py: { xs: 2, md: 4 } }}>
         <Container maxWidth="lg">
           <Outlet />
         </Container>

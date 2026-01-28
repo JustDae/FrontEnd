@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
+
 const items = [
   {
     name: "Especialidad de la Casa",
@@ -30,7 +31,7 @@ export function HomeCarousel() {
   return (
     <Box sx={{ 
       width: '100vw',
-      height: '100vh',
+      height: { xs: '100dvh', md: '100vh' },
       position: 'relative',
       left: '50%',
       right: '50%',
@@ -46,8 +47,8 @@ export function HomeCarousel() {
         top: '50%',
         transform: 'translateY(-50%)',
         zIndex: 20,
-        width: 50,
-        height: 50,
+        width: { xs: 40, md: 50 },
+        height: { xs: 40, md: 50 },
         transition: 'all 0.3s ease',
         '&:hover': {
           bgcolor: brandColor,
@@ -56,16 +57,16 @@ export function HomeCarousel() {
         },
         display: { xs: 'none', md: 'flex' }
       },
-      '& .prev-btn': { left: 30 },
-      '& .next-btn': { right: 30 },
+      '& .prev-btn': { left: { xs: 10, md: 30 } },
+      '& .next-btn': { right: { xs: 10, md: 30 } },
       '& .swiper-pagination-bullet': {
         backgroundColor: 'rgba(255,255,255,0.5)',
         opacity: 1,
-        mb: 3
+        mb: { xs: 1, md: 3 }
       },
       '& .swiper-pagination-bullet-active': {
         backgroundColor: brandColor,
-        width: '40px', 
+        width: { xs: '25px', md: '40px' }, 
         borderRadius: '4px',
         transition: 'width 0.3s'
       }
@@ -89,10 +90,10 @@ export function HomeCarousel() {
         ))}
 
         <IconButton className="nav-button prev-btn">
-          <ArrowBackIosNewIcon sx={{ fontSize: '1.2rem' }} />
+          <ArrowBackIosNewIcon sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }} />
         </IconButton>
         <IconButton className="nav-button next-btn">
-          <ArrowForwardIosIcon sx={{ fontSize: '1.2rem' }} />
+          <ArrowForwardIosIcon sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }} />
         </IconButton>
       </Swiper>
     </Box>
@@ -108,7 +109,7 @@ function Item({ item }: any) {
       elevation={0}
       sx={{
         position: 'relative',
-        height: '100vh',
+        height: '100%',
         width: '100vw',
         borderRadius: 0,
         m: 0,
@@ -130,7 +131,10 @@ function Item({ item }: any) {
       <Box sx={{
         position: 'absolute',
         inset: 0,
-        background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
+        background: {
+          xs: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%)',
+          md: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)'
+        },
         zIndex: 1
       }} />
 
@@ -138,10 +142,11 @@ function Item({ item }: any) {
         sx={{
           position: 'absolute',
           top: '50%',
-          left: { xs: '5%', md: '10%' },
-          transform: 'translateY(-50%)',
+          left: { xs: '50%', md: '10%' },
+          transform: { xs: 'translate(-50%, -50%)', md: 'translateY(-50%)' },
           color: 'white',
-          maxWidth: '600px',
+          maxWidth: { xs: '90%', sm: '80%', md: '600px' },
+          textAlign: { xs: 'center', md: 'left' },
           zIndex: 10
         }}
       >
@@ -150,9 +155,9 @@ function Item({ item }: any) {
           sx={{
             fontWeight: 900,
             mb: 1,
-            fontSize: { xs: '2.5rem', md: '4rem' },
+            fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
             textTransform: 'uppercase',
-            letterSpacing: '-2px',
+            letterSpacing: { xs: '-1px', md: '-2px' },
             lineHeight: 1
           }}
         >
@@ -165,7 +170,8 @@ function Item({ item }: any) {
             mb: 4, 
             opacity: 0.8, 
             maxWidth: '450px',
-            fontSize: { xs: '0.8rem', md: '0.95rem' },
+            mx: { xs: 'auto', md: 0 },
+            fontSize: { xs: '0.85rem', md: '0.95rem' },
             lineHeight: 1.6,
             fontWeight: 300
           }}
@@ -181,13 +187,13 @@ function Item({ item }: any) {
             fontWeight: 800,
             borderRadius: '100px',
             textTransform: 'none',
-            fontSize: '0.75rem',
-            px: 5,
-            py: 1.8,
+            fontSize: { xs: '0.7rem', md: '0.75rem' },
+            px: { xs: 4, md: 5 },
+            py: { xs: 1.5, md: 1.8 },
             boxShadow: `0 10px 25px ${alpha(brandColor, 0.4)}`,
             '&:hover': { 
               bgcolor: '#d43d31',
-              transform: 'translateY(-2px)'
+              transform: { xs: 'none', md: 'translateY(-2px)' }
             },
             transition: 'all 0.3s ease'
           }}

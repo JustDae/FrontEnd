@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, type JSX } from "react";
 import {
   Alert, Box, Button, Card, CardContent, CardMedia, Container,
   Grid as Grid, Pagination, Stack, TextField, Typography,
-  InputAdornment, Skeleton, Chip, Avatar, Zoom, alpha
+  InputAdornment, Skeleton, Chip, Avatar, Zoom, alpha, useTheme, useMediaQuery
 } from "@mui/material";
 import { Search, LocalDining, ArrowForward, RestaurantMenu } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -22,16 +22,17 @@ interface Producto {
 const brandColor = '#F55345';
 
 const styles = {
-  container: { minHeight: '100vh', bgcolor: '#f8fafc', pb: 10 },
+  container: { minHeight: '100vh', bgcolor: '#f8fafc', pb: { xs: 5, md: 10 } },
   searchBar: {
-    maxWidth: 800,
+    width: '100%',
+    maxWidth: { xs: '100%', sm: 600, md: 800 },
     mx: 'auto',
     '& .MuiOutlinedInput-root': {
       borderRadius: '50px',
       bgcolor: 'white',
-      px: 3,
-      height: '45px',
-      fontSize: '0.85rem',
+      px: { xs: 2, md: 3 },
+      height: { xs: '40px', md: '50px' },
+      fontSize: { xs: '0.8rem', md: '0.9rem' },
       boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
       '& fieldset': { border: '1px solid #f1f5f9' },
       '&:hover fieldset': { borderColor: brandColor },
@@ -42,12 +43,12 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: '24px',
+    borderRadius: { xs: '16px', md: '24px' },
     border: '1px solid #f1f5f9',
     bgcolor: 'white',
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      transform: 'translateY(-8px)',
+      transform: { md: 'translateY(-8px)' },
       boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
       '& .card-image': { transform: 'scale(1.05)' }
     }
@@ -60,13 +61,15 @@ const styles = {
     backdropFilter: 'blur(4px)',
     color: '#1e293b',
     fontWeight: 800,
-    fontSize: '0.75rem',
+    fontSize: { xs: '0.7rem', md: '0.75rem' },
     height: '24px',
     boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
   }
 };
 
 export default function PublicHome(): JSX.Element {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [sp, setSp] = useSearchParams();
   const navigate = useNavigate();
 
@@ -104,10 +107,10 @@ export default function PublicHome(): JSX.Element {
 
   return (
     <Box sx={styles.container}>
-      <Box sx={{ width: '100%', mb: 6 }}>
+      <Box sx={{ width: '100%', mb: { xs: 4, md: 6 } }}>
         <Box sx={{ 
           width: '100%', 
-          height: { xs: '400px', md: '600px' },
+          height: { xs: '300px', sm: '450px', md: '600px' },
           overflow: 'hidden',
           bgcolor: '#1e293b'
         }}>
@@ -115,19 +118,19 @@ export default function PublicHome(): JSX.Element {
         </Box>
       </Box>
 
-      <Container maxWidth={false} sx={{ px: { xs: 2, md: 6, lg: 10 } }}>
-        <Box sx={{ mb: 6, textAlign: 'center' }}>
-          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: alpha(brandColor, 0.1), color: brandColor }}>
-              <LocalDining sx={{ fontSize: '1.1rem' }} />
+      <Container maxWidth={false} sx={{ px: { xs: 2, sm: 4, md: 6, lg: 10 } }}>
+        <Box sx={{ mb: { xs: 4, md: 6 }, textAlign: 'center' }}>
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
+            <Avatar sx={{ width: { xs: 28, md: 32 }, height: { xs: 28, md: 32 }, bgcolor: alpha(brandColor, 0.1), color: brandColor }}>
+              <LocalDining sx={{ fontSize: { xs: '0.9rem', md: '1.1rem' } }} />
             </Avatar>
-            <Typography variant="h5" sx={{ fontWeight: 900, color: '#0f172a', letterSpacing: '-1px' }}>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#0f172a', letterSpacing: '-1px', fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
               Menú <Box component="span" sx={{ color: brandColor }}>Fresco</Box>
             </Typography>
           </Stack>
           
           <TextField
-            placeholder="Buscar..."
+            placeholder="Buscar platillos..."
             value={q}
             onChange={(e) => { setQ(e.target.value); setPage(1); }}
             fullWidth
@@ -144,18 +147,19 @@ export default function PublicHome(): JSX.Element {
 
         {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '15px', fontSize: '0.8rem' }}>{error}</Alert>}
 
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
           {loading ? (
-            [1, 2, 3, 4, 5].map((i) => (
+            Array.from(new Array(8)).map((_, i) => (
               <Grid key={i} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}>
                 <Skeleton variant="rounded" height={220} sx={{ borderRadius: '24px', mb: 1 }} />
+                <Skeleton width="60%" height={25} sx={{ mb: 1 }} />
                 <Skeleton width="40%" height={20} />
               </Grid>
             ))
           ) : items.length === 0 ? (
             <Grid size={{ xs: 12 }}>
               <Stack alignItems="center" sx={{ py: 10, opacity: 0.3 }}>
-                <RestaurantMenu sx={{ fontSize: 80, mb: 1 }} />
+                <RestaurantMenu sx={{ fontSize: { xs: 60, md: 80 }, mb: 1 }} />
                 <Typography variant="body2" fontWeight={700}>Sin resultados</Typography>
               </Stack>
             </Grid>
@@ -164,7 +168,7 @@ export default function PublicHome(): JSX.Element {
               <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}>
                 <Zoom in style={{ transitionDelay: '50ms' }}>
                   <Card sx={styles.productCard} elevation={0}>
-                    <Box sx={{ position: 'relative', overflow: 'hidden', height: 180 }}>
+                    <Box sx={{ position: 'relative', overflow: 'hidden', height: { xs: 200, md: 180 } }}>
                       <CardMedia
                         className="card-image"
                         component="img"
@@ -175,12 +179,12 @@ export default function PublicHome(): JSX.Element {
                       <Chip label={`$${Number(p.precio).toFixed(2)}`} sx={styles.priceBadge} />
                     </Box>
 
-                    <CardContent sx={{ p: 2.5, flexGrow: 1 }}>
-                      <Typography variant="caption" sx={{ fontWeight: 800, color: brandColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <CardContent sx={{ p: { xs: 2, md: 2.5 }, flexGrow: 1 }}>
+                      <Typography variant="caption" sx={{ fontWeight: 800, color: brandColor, textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.65rem' }}>
                         {p.categoria?.nombre || p.categoria?.name || "General"}
                       </Typography>
                       
-                      <Typography variant="body2" sx={{ fontWeight: 800, mt: 0.5, mb: 0.5, color: '#1e293b', lineHeight: 1.2 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, mt: 0.5, mb: 0.5, color: '#1e293b', lineHeight: 1.2, fontSize: { xs: '0.9rem', md: '0.875rem' } }}>
                         {p.nombre}
                       </Typography>
 
@@ -191,13 +195,13 @@ export default function PublicHome(): JSX.Element {
                       <Button
                         variant="contained"
                         fullWidth
-                        size="small"
+                        size={isMobile ? "medium" : "small"}
                         endIcon={<ArrowForward sx={{ fontSize: '0.9rem' }} />}
                         onClick={() => navigate(`/productos/${p.id}`)}
                         sx={{
                           bgcolor: '#0f172a',
                           color: 'white',
-                          py: 1,
+                          py: { xs: 1.2, md: 1 },
                           borderRadius: '12px',
                           textTransform: 'none',
                           fontWeight: 700,
@@ -205,7 +209,7 @@ export default function PublicHome(): JSX.Element {
                           '&:hover': { bgcolor: brandColor, boxShadow: `0 8px 16px ${brandColor}30` }
                         }}
                       >
-                        Detalles
+                        Ver Detalles
                       </Button>
                     </CardContent>
                   </Card>
@@ -216,12 +220,16 @@ export default function PublicHome(): JSX.Element {
         </Grid>
 
         {!loading && items.length > 0 && (
-          <Stack direction="row" justifyContent="center" sx={{ mt: 6 }}>
+          <Stack direction="row" justifyContent="center" sx={{ mt: { xs: 4, md: 6 } }}>
             <Pagination
               count={totalPages}
               page={page}
-              onChange={(_, v) => setPage(v)}
-              size="small"
+              onChange={(_, v) => {
+                setPage(v);
+                window.scrollTo({ top: isMobile ? 300 : 500, behavior: 'smooth' });
+              }}
+              size={isMobile ? "medium" : "small"}
+              siblingCount={isMobile ? 0 : 1}
               sx={{
                 '& .MuiPaginationItem-root': { fontWeight: 700, fontSize: '0.75rem' },
                 '& .Mui-selected': { bgcolor: `${brandColor} !important`, color: 'white' }

@@ -18,7 +18,6 @@ export const privateRoutes: RouteObject = {
   path: "/dashboard",
   children: [
     { index: true, element: <DashboardHome /> },
-    { path: "categories", element: <CategoriesPage /> },
     { path: "productos", element: <ProductosPage /> },
     { path: "detalle-pedido/:id?", element: <DetallePedido /> },
     { path: "forbidden", element: <Forbidden /> },
@@ -62,6 +61,14 @@ export const privateRoutes: RouteObject = {
       element: (
         <RequireRole allow={["ADMIN"]}>
           <FacturaPage />
+        </RequireRole>
+        );
+    },
+    {
+      path: "categories",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <CategoriesPage />
         </RequireRole>
       ),
     },

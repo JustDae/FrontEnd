@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, type JSX } from "react";
 import {
   Alert, Box, Button, Card, CardContent, CardMedia, Container,
   Grid as Grid, Pagination, Stack, TextField, Typography,
-  InputAdornment, Skeleton, Chip, Avatar, Zoom
+  InputAdornment, Skeleton, Chip, Avatar, Zoom, alpha
 } from "@mui/material";
 import { Search, LocalDining, ArrowForward, RestaurantMenu } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -24,14 +24,15 @@ const brandColor = '#F55345';
 const styles = {
   container: { minHeight: '100vh', bgcolor: '#f8fafc', pb: 10 },
   searchBar: {
-    maxWidth: 550,
+    maxWidth: 800,
     mx: 'auto',
     '& .MuiOutlinedInput-root': {
       borderRadius: '50px',
       bgcolor: 'white',
       px: 3,
       height: '45px',
-      boxShadow: '0 10px 40px rgba(0,0,0,0.04)',
+      fontSize: '0.85rem',
+      boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
       '& fieldset': { border: '1px solid #f1f5f9' },
       '&:hover fieldset': { borderColor: brandColor },
       '&.Mui-focused fieldset': { borderColor: brandColor, borderWidth: '2px' }
@@ -47,7 +48,7 @@ const styles = {
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
       transform: 'translateY(-8px)',
-      boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
       '& .card-image': { transform: 'scale(1.05)' }
     }
   },
@@ -59,9 +60,9 @@ const styles = {
     backdropFilter: 'blur(4px)',
     color: '#1e293b',
     fontWeight: 800,
-    fontSize: '0.9rem',
-    height: '28px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+    fontSize: '0.75rem',
+    height: '24px',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
   }
 };
 
@@ -69,12 +70,9 @@ export default function PublicHome(): JSX.Element {
   const [sp, setSp] = useSearchParams();
   const navigate = useNavigate();
 
-  const qParam = sp.get("q") || "";
-  const pageParam = Number(sp.get("page") || "1");
-
-  const [q, setQ] = useState(qParam);
+  const [q, setQ] = useState(sp.get("q") || "");
   const [items, setItems] = useState<Producto[]>([]);
-  const [page, setPage] = useState(pageParam > 0 ? pageParam : 1);
+  const [page, setPage] = useState(Number(sp.get("page") || "1"));
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -83,7 +81,7 @@ export default function PublicHome(): JSX.Element {
     try {
       setLoading(true);
       const res = await api.get("/productos", {
-        params: { page, limit: 9, search: q }
+        params: { page, limit: 15, search: q }
       });
       const result = res.data?.data?.items || res.data?.items || [];
       setItems(result);
@@ -106,25 +104,30 @@ export default function PublicHome(): JSX.Element {
 
   return (
     <Box sx={styles.container}>
-      <Container maxWidth="md" sx={{ mt: 2, mb: 4 }}>
-        <Box sx={{ borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', maxHeight: '300px' }}>
+      <Box sx={{ width: '100%', mb: 6 }}>
+        <Box sx={{ 
+          width: '100%', 
+          height: { xs: '400px', md: '600px' },
+          overflow: 'hidden',
+          bgcolor: '#1e293b'
+        }}>
           <HomeCarousel />
         </Box>
-      </Container>
+      </Box>
 
-      <Container maxWidth="md">
-        <Box sx={{ mb: 5, textAlign: 'center' }}>
+      <Container maxWidth={false} sx={{ px: { xs: 2, md: 6, lg: 10 } }}>
+        <Box sx={{ mb: 6, textAlign: 'center' }}>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: `${brandColor}15`, color: brandColor }}>
-              <LocalDining sx={{ fontSize: '1.2rem' }} />
+            <Avatar sx={{ width: 32, height: 32, bgcolor: alpha(brandColor, 0.1), color: brandColor }}>
+              <LocalDining sx={{ fontSize: '1.1rem' }} />
             </Avatar>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: '#0f172a', letterSpacing: '-1px' }}>
+            <Typography variant="h5" sx={{ fontWeight: 900, color: '#0f172a', letterSpacing: '-1px' }}>
               Menú <Box component="span" sx={{ color: brandColor }}>Fresco</Box>
             </Typography>
           </Stack>
           
           <TextField
-            placeholder="¿Qué te gustaría comer?"
+            placeholder="Buscar..."
             value={q}
             onChange={(e) => { setQ(e.target.value); setPage(1); }}
             fullWidth
@@ -132,36 +135,36 @@ export default function PublicHome(): JSX.Element {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search sx={{ color: brandColor, fontSize: '1.2rem' }} />
+                  <Search sx={{ color: brandColor, fontSize: '1.1rem', ml: 1 }} />
                 </InputAdornment>
               ),
             }}
           />
         </Box>
 
-        {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '15px' }}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{ mb: 4, borderRadius: '15px', fontSize: '0.8rem' }}>{error}</Alert>}
 
         <Grid container spacing={3}>
           {loading ? (
-            [1, 2, 3, 4, 5, 6].map((i) => (
-              <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Skeleton variant="rounded" height={200} sx={{ borderRadius: '24px', mb: 1 }} />
-                <Skeleton width="60%" />
+            [1, 2, 3, 4, 5].map((i) => (
+              <Grid key={i} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}>
+                <Skeleton variant="rounded" height={220} sx={{ borderRadius: '24px', mb: 1 }} />
+                <Skeleton width="40%" height={20} />
               </Grid>
             ))
           ) : items.length === 0 ? (
             <Grid size={{ xs: 12 }}>
-              <Stack alignItems="center" sx={{ py: 6, opacity: 0.3 }}>
+              <Stack alignItems="center" sx={{ py: 10, opacity: 0.3 }}>
                 <RestaurantMenu sx={{ fontSize: 80, mb: 1 }} />
-                <Typography variant="h6" fontWeight={700}>No hay platos</Typography>
+                <Typography variant="body2" fontWeight={700}>Sin resultados</Typography>
               </Stack>
             </Grid>
           ) : (
             items.map((p) => (
-              <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}>
                 <Zoom in style={{ transitionDelay: '50ms' }}>
                   <Card sx={styles.productCard} elevation={0}>
-                    <Box sx={{ position: 'relative', overflow: 'hidden', height: 160 }}>
+                    <Box sx={{ position: 'relative', overflow: 'hidden', height: 180 }}>
                       <CardMedia
                         className="card-image"
                         component="img"
@@ -172,24 +175,24 @@ export default function PublicHome(): JSX.Element {
                       <Chip label={`$${Number(p.precio).toFixed(2)}`} sx={styles.priceBadge} />
                     </Box>
 
-                    <CardContent sx={{ p: 2, flexGrow: 1 }}>
-                      <Typography variant="caption" sx={{ fontWeight: 800, color: brandColor, textTransform: 'uppercase' }}>
+                    <CardContent sx={{ p: 2.5, flexGrow: 1 }}>
+                      <Typography variant="caption" sx={{ fontWeight: 800, color: brandColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         {p.categoria?.nombre || p.categoria?.name || "General"}
                       </Typography>
                       
-                      <Typography variant="subtitle1" sx={{ fontWeight: 800, mt: 0.2, mb: 0.5, color: '#1e293b', lineHeight: 1.2 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, mt: 0.5, mb: 0.5, color: '#1e293b', lineHeight: 1.2 }}>
                         {p.nombre}
                       </Typography>
 
-                      <Typography variant="caption" sx={{ color: '#64748b', display: 'block', mb: 2, lineHeight: 1.4, height: '2.8rem', overflow: 'hidden' }}>
-                        {p.descripcion || "Ingredientes seleccionados para una experiencia única."}
+                      <Typography variant="caption" sx={{ color: '#64748b', display: 'block', mb: 2, lineHeight: 1.4, height: '2.8rem', overflow: 'hidden', fontSize: '0.72rem' }}>
+                        {p.descripcion || "Selección gourmet preparada con los mejores ingredientes."}
                       </Typography>
 
                       <Button
                         variant="contained"
                         fullWidth
                         size="small"
-                        endIcon={<ArrowForward sx={{ fontSize: '1rem' }} />}
+                        endIcon={<ArrowForward sx={{ fontSize: '0.9rem' }} />}
                         onClick={() => navigate(`/productos/${p.id}`)}
                         sx={{
                           bgcolor: '#0f172a',
@@ -198,11 +201,11 @@ export default function PublicHome(): JSX.Element {
                           borderRadius: '12px',
                           textTransform: 'none',
                           fontWeight: 700,
-                          fontSize: '0.85rem',
+                          fontSize: '0.75rem',
                           '&:hover': { bgcolor: brandColor, boxShadow: `0 8px 16px ${brandColor}30` }
                         }}
                       >
-                        Ver Detalles
+                        Detalles
                       </Button>
                     </CardContent>
                   </Card>
@@ -213,14 +216,14 @@ export default function PublicHome(): JSX.Element {
         </Grid>
 
         {!loading && items.length > 0 && (
-          <Stack direction="row" justifyContent="center" sx={{ mt: 5 }}>
+          <Stack direction="row" justifyContent="center" sx={{ mt: 6 }}>
             <Pagination
               count={totalPages}
               page={page}
               onChange={(_, v) => setPage(v)}
-              size="medium"
+              size="small"
               sx={{
-                '& .MuiPaginationItem-root': { fontWeight: 700 },
+                '& .MuiPaginationItem-root': { fontWeight: 700, fontSize: '0.75rem' },
                 '& .Mui-selected': { bgcolor: `${brandColor} !important`, color: 'white' }
               }}
             />

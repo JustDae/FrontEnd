@@ -2,7 +2,7 @@
 
 Bienvenido a la documentación completa de Restaurant App. Aquí encontrarás todo lo que necesitas para entender, desarrollar y mantener la aplicación.
 
-## 📖 Documentos Principales
+## Documentos Principales
 
 ### 1. [README.md](../README.md) - Visión General
 - Descripción del proyecto
@@ -55,7 +55,7 @@ Bienvenido a la documentación completa de Restaurant App. Aquí encontrarás to
 - Interceptores
 - Rate limiting y caché
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Para Nuevos Desarrolladores
 1. Lee [README.md](../README.md) para entender el proyecto
@@ -74,7 +74,7 @@ Bienvenido a la documentación completa de Restaurant App. Aquí encontrarás to
 2. Consulta [SERVICES.md](SERVICES.md) para el patrón de servicio
 3. Usa helpers de error de [API_INTEGRATION.md](API_INTEGRATION.md)
 
-## 🗺️ Mapa de la Aplicación
+##  Mapa de la Aplicación
 
 ### Rutas Públicas
 ```
@@ -100,7 +100,7 @@ Bienvenido a la documentación completa de Restaurant App. Aquí encontrarás to
 /admin/auditoria    - Logs de auditoría
 ```
 
-## 📁 Estructura de Carpetas
+## Estructura de Carpetas
 
 ```
 src/
@@ -118,7 +118,7 @@ src/
 
 **Ver documentación:** [DEVELOPMENT.md](DEVELOPMENT.md#estructura-del-proyecto)
 
-## 🔧 Tecnologías
+## Tecnologías
 
 | Librería | Versión | Uso |
 |----------|---------|-----|
@@ -131,7 +131,7 @@ src/
 | **Jest** | ^30.2.0 | Testing |
 | **ESLint** | ^9.39.1 | Linting |
 
-## 📝 Convenciones
+## Convenciones
 
 ### Nombrado
 - **Componentes:** PascalCase (`ProductoForm.tsx`)
@@ -148,7 +148,7 @@ src/
 
 **Ver documentación:** [DEVELOPMENT.md](DEVELOPMENT.md#convenciones-de-código)
 
-## 🔐 Seguridad
+## Seguridad
 
 ### Autenticación
 - JWT tokens almacenados en localStorage
@@ -251,7 +251,7 @@ Usa React DevTools y la consola del navegador. Ver [DEVELOPMENT.md](DEVELOPMENT.
 ### Notificaciones
 Usa `useUi()` hook para mostrar snackbars. Ver [CONTEXTS.md](CONTEXTS.md#uicontext)
 
-## 🤝 Contribución
+## Contribución
 
 1. Crear rama: `git checkout -b feature/nombre`
 2. Hacer cambios
@@ -261,7 +261,7 @@ Usa `useUi()` hook para mostrar snackbars. Ver [CONTEXTS.md](CONTEXTS.md#uiconte
 
 **Ver documentación:** [DEVELOPMENT.md](DEVELOPMENT.md#git-workflow)
 
-## ❓ Preguntas Frecuentes
+## Preguntas Frecuentes
 
 **P: ¿Cómo agregar un nuevo campo a un formulario?**
 R: Ver [COMPONENTS.md](COMPONENTS.md#componentes-de-formularios)
@@ -278,7 +278,7 @@ R: Ver [API_INTEGRATION.md](API_INTEGRATION.md#manejo-de-errores)
 **P: ¿Cómo usar estado global?**
 R: Ver [CONTEXTS.md](CONTEXTS.md#uso-en-componentes)
 
-## 📞 Contacto y Soporte
+## Contacto y Soporte
 
 Para dudas o problemas:
 1. Revisar la documentación relevante

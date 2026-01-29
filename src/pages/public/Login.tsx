@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+import { Alert, Button, Paper, Stack, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.tsx";
+=======
 import {
   Button,
   Stack,
@@ -17,10 +23,17 @@ import { useAuth } from "../../context/AuthContext.tsx";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 import type { JSX } from "react";
 
 type LocationState = { from?: string };
 
+<<<<<<< HEAD
+export default function Login(): JSX.Element {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+=======
 const brandColor = '#F55345';
 
 const backgroundImages = [
@@ -39,12 +52,23 @@ export default function Login(): JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentImg, setCurrentImg] = useState(0);
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const state = (location.state || {}) as LocationState;
 
+<<<<<<< HEAD
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setError(null);
+      await login({ username, password });
+      navigate(state.from || "/dashboard", { replace: true });
+    } catch {
+      setError("Credenciales inválidas o error de servidor.");
+=======
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImg((prev) => (prev + 1) % backgroundImages.length);
@@ -95,10 +119,38 @@ export default function Login(): JSX.Element {
       px: 2.5,
       fontWeight: 500,
       fontSize: { xs: '0.9rem', md: '1rem' }
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     }
   };
 
   return (
+<<<<<<< HEAD
+    <Paper sx={{ p: 3, maxWidth: 520, mx: "auto" }}>
+      <Stack spacing={2} component="form" onSubmit={handleSubmit}>
+        <Typography variant="h5">Login</Typography>
+
+        {error ? <Alert severity="error">{error}</Alert> : null}
+
+        <TextField
+          label="Email (username)"
+          type="email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <Button type="submit" variant="contained">Entrar</Button>
+      </Stack>
+    </Paper>
+=======
     <Box sx={{ 
       height: "100vh", 
       display: "flex", 
@@ -314,5 +366,6 @@ export default function Login(): JSX.Element {
         </Typography>
       </Box>
     </Box>
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   );
 }

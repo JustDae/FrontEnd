@@ -1,9 +1,16 @@
+<<<<<<< HEAD
+import { Box, Typography, Button, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
+=======
 import { Box, Typography, Button, Paper, alpha, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade, Navigation } from 'swiper/modules';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -13,14 +20,24 @@ const items = [
   {
     name: "Especialidad de la Casa",
     description: "Prueba nuestro lomo saltado con el toque secreto del chef.",
+<<<<<<< HEAD
+    image: "/images/plato1.png",
+    link: "/menu"
+=======
     image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1600",
     link: "#menu"
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   },
   {
     name: "Postres Irresistibles",
     description: "El final dulce perfecto para tu comida.",
+<<<<<<< HEAD
+    image: "/images/plato2.png",
+    link: "/menu"
+=======
     image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1600",
     link: "#menu"
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   }
 ];
 
@@ -29,6 +46,18 @@ export function HomeCarousel() {
 
   return (
     <Box sx={{ 
+<<<<<<< HEAD
+      width: '100%', 
+      position: 'relative',
+     
+      '& .swiper-pagination-bullet': {
+        backgroundColor: '#ccc',
+        opacity: 1,
+      },
+      '& .swiper-pagination-bullet-active': {
+        backgroundColor: brandColor,
+        width: '20px', 
+=======
       width: '100%',
       height: { xs: '100dvh', md: '100vh' },
       position: 'relative',
@@ -62,11 +91,26 @@ export function HomeCarousel() {
       '& .swiper-pagination-bullet-active': {
         backgroundColor: brandColor,
         width: { xs: '25px', md: '40px' }, 
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
         borderRadius: '4px',
         transition: 'width 0.3s'
       }
     }}>
       <Swiper
+<<<<<<< HEAD
+        modules={[Autoplay, Pagination, EffectFade]}
+        effect="fade"
+        loop={true}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        pagination={{ clickable: true }}
+        navigation={false} 
+        style={{
+          paddingBottom: '30px' 
+        }}
+=======
         modules={[Autoplay, Pagination, EffectFade, Navigation]}
         effect="fade"
         loop={true}
@@ -77,12 +121,15 @@ export function HomeCarousel() {
           nextEl: '.next-btn',
         }}
         style={{ width: '100%', height: '100%' }}
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       >
         {items.map((item, i) => (
           <SwiperSlide key={i}>
             <Item item={item} />
           </SwiperSlide>
         ))}
+<<<<<<< HEAD
+=======
 
         <IconButton className="nav-button prev-btn">
           <ArrowBackIosNewIcon sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }} />
@@ -90,6 +137,7 @@ export function HomeCarousel() {
         <IconButton className="nav-button next-btn">
           <ArrowForwardIosIcon sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }} />
         </IconButton>
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       </Swiper>
     </Box>
   );
@@ -99,6 +147,8 @@ function Item({ item }: any) {
   const navigate = useNavigate();
   const brandColor = '#F55345';
 
+<<<<<<< HEAD
+=======
   const handleNavigation = () => {
     if (item.link.startsWith('#')) {
       const element = document.getElementById(item.link.substring(1));
@@ -110,17 +160,27 @@ function Item({ item }: any) {
     }
   };
 
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   return (
     <Paper
       elevation={0}
       sx={{
         position: 'relative',
+<<<<<<< HEAD
+        height: { xs: '350px', md: '500px' },
+        borderRadius: '16px',
+        overflow: 'hidden',
+        mx: { xs: 0, md: 1 },
+        mt: 1,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+=======
         height: '100%',
         width: '100%',
         borderRadius: 0,
         m: 0,
         p: 0,
         overflow: 'hidden'
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       }}
     >
       <Box
@@ -130,6 +190,13 @@ function Item({ item }: any) {
         sx={{
           width: '100%',
           height: '100%',
+<<<<<<< HEAD
+          objectFit: 'cover',
+          filter: 'brightness(0.65)' 
+        }}
+      />
+
+=======
           objectFit: 'cover'
         }}
       />
@@ -144,19 +211,35 @@ function Item({ item }: any) {
         zIndex: 1
       }} />
 
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       <Box
         sx={{
           position: 'absolute',
           top: '50%',
+<<<<<<< HEAD
+          left: { xs: '5%', md: '8%' },
+          transform: 'translateY(-50%)',
+          color: 'white',
+          maxWidth: '500px',
+=======
           left: { xs: '5%', md: '10%' },
           transform: 'translateY(-50%)',
           color: 'white',
           width: { xs: '90%', md: '600px' },
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
           textAlign: 'left',
           zIndex: 10
         }}
       >
         <Typography
+<<<<<<< HEAD
+          variant="h3"
+          sx={{
+            fontWeight: 800,
+            mb: 1,
+            fontSize: { xs: '1.8rem', md: '3rem' },
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+=======
           variant="h1"
           sx={{
             fontWeight: 900,
@@ -170,10 +253,14 @@ function Item({ item }: any) {
             lineHeight: 1.1,
             wordBreak: 'break-word',
             overflowWrap: 'break-word'
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
           }}
         >
           {item.name}
         </Typography>
+<<<<<<< HEAD
+        <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
+=======
         
         <Typography 
           variant="body2" 
@@ -186,11 +273,28 @@ function Item({ item }: any) {
             fontWeight: 300
           }}
         >
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
           {item.description}
         </Typography>
 
         <Button
           variant="contained"
+<<<<<<< HEAD
+          size="large"
+          onClick={() => navigate(item.link)}
+          sx={{
+            bgcolor: brandColor,
+            fontWeight: 600,
+            borderRadius: '10px',
+            textTransform: 'none',
+            px: 4,
+            py: 1.2,
+            boxShadow: `0 4px 14px ${brandColor}66`,
+            '&:hover': { bgcolor: '#d44336' }
+          }}
+        >
+          Ver Menú
+=======
           onClick={handleNavigation}
           sx={{
             bgcolor: brandColor,
@@ -209,6 +313,7 @@ function Item({ item }: any) {
           }}
         >
           Explorar Menú
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
         </Button> 
       </Box>
     </Paper>

@@ -19,9 +19,16 @@
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
     "axios": "^1.13.2",
+<<<<<<< HEAD
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.12.0",
+=======
+    "framer-motion": "^12.29.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.0",
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     "swiper": "^12.0.3"
   },
   "devDependencies": {
@@ -34,7 +41,11 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
+<<<<<<< HEAD
     "@types/react": "^19.2.9",
+=======
+    "@types/react": "^19.2.5",
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "babel-jest": "^30.2.0",

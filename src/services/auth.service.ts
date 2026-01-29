@@ -7,7 +7,7 @@ export type SuccessResponseDto<T> = {
 };
 
 
-export type AuthTokenData = {
+git pull origin main --allow-unrelated-historiesexport type AuthTokenData = {
   access_token: string;
 };
 

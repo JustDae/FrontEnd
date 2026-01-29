@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useState, useEffect, useMemo, type JSX } from "react";
+=======
+import { useState, useEffect, type JSX } from "react";
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 import {
   Box, Typography, TextField, IconButton, Button,
   List, ListItem, ListItemText, ListItemSecondaryAction, Paper, Avatar,
@@ -6,7 +10,12 @@ import {
 } from "@mui/material";
 import {
   Search, Edit, Delete, NavigateNext,
+<<<<<<< HEAD
   Add, Group, AdminPanelSettings, Person
+=======
+  Add, Group, AdminPanelSettings, Person,
+  ArrowBack, ArrowForward
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,13 +31,22 @@ export default function UsersPage(): JSX.Element {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filtro, setFiltro] = useState("");
+<<<<<<< HEAD
   const [open, setOpen] = useState(false);
   const [editando, setEditando] = useState<User | null>(null);
 
+=======
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [editando, setEditando] = useState<User | null>(null);
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<User | null>(null);
 
   const fetchUsers = (): void => {
+<<<<<<< HEAD
     getUsers()
       .then((res: any) => {
         let list = [];
@@ -46,10 +64,29 @@ export default function UsersPage(): JSX.Element {
         setUsers(list);
       })
       .catch(() => {
+=======
+    getUsers({ page: page, limit: 10, search: filtro })
+      .then((res: any) => {
+        const datosBackend = res.data || res;
+
+        if (datosBackend.items) {
+           setUsers(datosBackend.items);
+           if (datosBackend.meta) {
+             setTotalItems(datosBackend.meta.totalItems);
+             setTotalPages(datosBackend.meta.totalPages);
+           }
+        } else {
+           setUsers([]);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
         setUsers([]);
       });
   }
 
+<<<<<<< HEAD
   useEffect(fetchUsers, []);
 
   const totalUsers = useMemo(() => users.length, [users]);
@@ -61,6 +98,26 @@ export default function UsersPage(): JSX.Element {
     try {
       const file = formData.get("file") as File | null;
 
+=======
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
+
+  useEffect(() => {
+     if (page !== 1) {
+       setPage(1);
+     } else {
+       fetchUsers();
+     }
+  }, [filtro]);
+
+
+  const totalAdmins = users.filter(u => u.rol?.nombre === 'ADMIN' || u.rol?.id === 1).length;
+
+  const handleSave = async (formData: FormData) => {
+    try {
+      const file = formData.get("file") as File | null;
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       const userData: any = {
         username: formData.get("username"),
         rolId: Number(formData.get("rolId")),
@@ -78,7 +135,11 @@ export default function UsersPage(): JSX.Element {
         notify({ message: "Usuario actualizado correctamente", severity: "success" });
       } else {
         const res = await createUser(userData);
+<<<<<<< HEAD
         targetUserId = res.id || res.data?.id || res.user?.id;
+=======
+        targetUserId = res.id || res.data?.id || (res.data && res.data.id);
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
         notify({ message: "Usuario creado con éxito", severity: "success" });
       }
 
@@ -87,8 +148,13 @@ export default function UsersPage(): JSX.Element {
           await uploadUserProfile(targetUserId, file);
           notify({ message: "Foto de perfil actualizada", severity: "success" });
         } catch (imgError) {
+<<<<<<< HEAD
           console.error("Error subiendo imagen:", imgError);
           notify({ message: "Usuario guardado, pero falló la imagen (Solo JPG/PNG)", severity: "warning" });
+=======
+          console.error(imgError);
+          notify({ message: "Usuario guardado, error en imagen", severity: "warning" });
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
         }
       }
 
@@ -96,7 +162,11 @@ export default function UsersPage(): JSX.Element {
       fetchUsers();
     } catch (err) {
       console.error(err);
+<<<<<<< HEAD
       notify({ message: "Error al guardar (Revisa si el usuario ya existe)", severity: "error" });
+=======
+      notify({ message: "Error al guardar", severity: "error" });
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     }
   };
 
@@ -119,11 +189,14 @@ export default function UsersPage(): JSX.Element {
     }
   };
 
+<<<<<<< HEAD
   const filtrados = users.filter(u =>
     u.username.toLowerCase().includes(filtro.toLowerCase()) ||
     u.email.toLowerCase().includes(filtro.toLowerCase())
   );
 
+=======
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
   return (
     <Box sx={{ p: 4, bgcolor: "#f9f9f9", minHeight: "100vh" }}>
       <Box sx={{ mb: 4 }}>
@@ -158,7 +231,11 @@ export default function UsersPage(): JSX.Element {
               </Avatar>
               <Box>
                 <Typography variant="caption" color="text.secondary">Total Usuarios</Typography>
+<<<<<<< HEAD
                 <Typography variant="h5" sx={{ fontWeight: "bold" }}>{totalUsers}</Typography>
+=======
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>{totalItems}</Typography>
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
               </Box>
             </Stack>
           </CardContent>
@@ -171,7 +248,11 @@ export default function UsersPage(): JSX.Element {
                 <AdminPanelSettings />
               </Avatar>
               <Box>
+<<<<<<< HEAD
                 <Typography variant="caption" color="text.secondary">Administradores</Typography>
+=======
+                <Typography variant="caption" color="text.secondary">Administradores (en vista)</Typography>
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
                 <Typography variant="h5" sx={{ fontWeight: "bold" }}>{totalAdmins}</Typography>
               </Box>
             </Stack>
@@ -195,14 +276,24 @@ export default function UsersPage(): JSX.Element {
         }}
       />
 
+<<<<<<< HEAD
       <Paper variant="outlined" sx={{ borderRadius: "16px", overflow: "hidden" }}>
         <List sx={{ p: 0 }}>
           {filtrados.length === 0 ? (
+=======
+      <Paper variant="outlined" sx={{ borderRadius: "16px", overflow: "hidden", pb: 2 }}>
+        <List sx={{ p: 0 }}>
+          {users.length === 0 ? (
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
             <Box sx={{ p: 5, textAlign: "center" }}>
               <Typography color="text.secondary">No se encontraron usuarios.</Typography>
             </Box>
           ) : (
+<<<<<<< HEAD
             filtrados.map((user, index) => (
+=======
+            users.map((user, index) => (
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
               <Box key={user.id}>
                 <ListItem sx={{ py: 2, px: 3, "&:hover": { bgcolor: "#fcfcfc" } }}>
                   <Avatar
@@ -249,11 +340,43 @@ export default function UsersPage(): JSX.Element {
                     </Tooltip>
                   </ListItemSecondaryAction>
                 </ListItem>
+<<<<<<< HEAD
                 {index < filtrados.length - 1 && <Divider component="li" />}
+=======
+                {index < users.length - 1 && <Divider component="li" />}
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
               </Box>
             ))
           )}
         </List>
+<<<<<<< HEAD
+=======
+
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3, mb: 1 }}>
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBack />}
+                disabled={page === 1}
+                onClick={() => setPage(prev => prev - 1)}
+            >
+                Anterior
+            </Button>
+
+            <Typography variant="body1" sx={{ alignSelf: 'center', fontWeight: 'bold' }}>
+                Página {page} de {totalPages}
+            </Typography>
+
+            <Button
+                variant="outlined"
+                endIcon={<ArrowForward />}
+                disabled={page >= totalPages}
+                onClick={() => setPage(prev => prev + 1)}
+            >
+                Siguiente
+            </Button>
+        </Stack>
+
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
       </Paper>
 
       <UserFormDialog

@@ -79,4 +79,8 @@ Thumbs.db
 # (ej: archivos de backup)
 \#*#
 /temp
+<<<<<<< HEAD
 /tmp    
+=======
+/tmp
+>>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e

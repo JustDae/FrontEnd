@@ -6,6 +6,7 @@ export type SuccessResponseDto<T> = {
   data: T;
 };
 
+
 export type AuthTokenData = {
   access_token: string;
 };

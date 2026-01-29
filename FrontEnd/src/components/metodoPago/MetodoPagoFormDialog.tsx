@@ -1,22 +1,22 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
-  Stack,
+  DialogContent,
+  DialogActions,
   TextField,
-  FormControlLabel,
+  Button,
+  Stack,
   Checkbox,
+  FormControlLabel,
 } from "@mui/material";
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   open: boolean;
   mode: "create" | "edit";
-  initial?: any | null;
+  initial?: any;
   onClose: () => void;
-  onSubmit: (payload: any) => void;
+  onSubmit: (data: any) => void;
 };
 
 export default function MetodoPagoFormDialog({
@@ -25,7 +25,7 @@ export default function MetodoPagoFormDialog({
   initial,
   onClose,
   onSubmit,
-}: Props): JSX.Element {
+}: Props) {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [activo, setActivo] = useState(true);
@@ -40,36 +40,39 @@ export default function MetodoPagoFormDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ nombre, descripcion, activo });
+
+    onSubmit({
+      nombre: nombre.trim(),
+      descripcion: descripcion.trim(),
+      activo,
+    });
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
       <DialogTitle>
-        {mode === "create" ? "Nuevo Método de Pago" : "Editar Método de Pago"}
+        {mode === "create"
+          ? "Nuevo Método de Pago"
+          : "Editar Método de Pago"}
       </DialogTitle>
 
       <DialogContent>
-        <Stack
-          spacing={3}
-          component="form"
-          id="metodo-pago-form"
-          onSubmit={handleSubmit}
-          sx={{ mt: 2 }}
-        >
+        <Stack spacing={3} component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
-            label="Nombre"
+            label="Nombre *"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            fullWidth
             required
+            fullWidth
           />
+
           <TextField
             label="Descripción"
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
             fullWidth
           />
+
           <FormControlLabel
             control={
               <Checkbox
@@ -83,8 +86,10 @@ export default function MetodoPagoFormDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button type="submit" form="metodo-pago-form" variant="contained">
+        <Button onClick={onClose} color="inherit">
+          Cancelar
+        </Button>
+        <Button type="submit" variant="contained">
           Guardar
         </Button>
       </DialogActions>

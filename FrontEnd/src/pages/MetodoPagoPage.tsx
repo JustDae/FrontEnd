@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, type JSX } from "react";
 import {
-  Box, Typography, TextField, IconButton, Button, Breadcrumbs,
+  Typography, TextField, IconButton, Button, Breadcrumbs,
   Link, Stack, Card, CardContent, InputAdornment, Skeleton, Container,
   Grid, Zoom, Divider, Chip
 } from "@mui/material";
@@ -131,3 +131,4 @@ export default function MetodoPagoPage(): JSX.Element {
     </Container>
   );
 }
+    

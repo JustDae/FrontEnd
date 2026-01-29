@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useCallback, type JSX } from "react";
 import {
-  Box, Typography, TextField, IconButton, Button, Breadcrumbs,
+  Typography, TextField, IconButton, Button, Breadcrumbs,
   Link, Stack, Card, CardContent, InputAdornment, Skeleton, Container,
   Grid, Zoom, Divider, Tooltip
 } from "@mui/material";
-import { Search, Edit, Delete, NavigateNext, Add, TableBar, Clear } from "@mui/icons-material";
+import { Search, Edit, Delete, NavigateNext, Add, Clear } from "@mui/icons-material";
 import api from "../services/api";
 import { useUi } from "../context/UiContext";
 import MesaFormDialog from "../components/mesa/MesaFormDialog";

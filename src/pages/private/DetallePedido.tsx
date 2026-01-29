@@ -2,11 +2,7 @@ import {
   Alert, Button, IconButton, Pagination, Paper, Stack, Table,
   TableBody, TableCell, TableContainer, TableHead, TableRow, TextField,
   Typography, InputAdornment, Breadcrumbs, Link, Card, 
-<<<<<<< HEAD
-  CardContent, Skeleton, Box, Avatar, Grid
-=======
   CardContent, Skeleton, Box, Avatar, Grid as Grid, Fade, Tooltip
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 } from "@mui/material";
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -41,8 +37,6 @@ function useDebouncedValue<T>(value: T, delayMs: number): T {
   return debounced;
 }
 
-<<<<<<< HEAD
-=======
 const styles = {
   container: { p: { xs: 2, md: 4 }, bgcolor: "#f4f7fe", minHeight: "100vh" },
   statCard: { 
@@ -78,7 +72,6 @@ const styles = {
   }
 };
 
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 export default function DetallePedidoPage(): JSX.Element {
   const { notify } = useUi();
   const navigate = useNavigate();
@@ -185,19 +178,6 @@ export default function DetallePedidoPage(): JSX.Element {
   };
 
   return (
-<<<<<<< HEAD
-    <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f9f9f9", minHeight: "100vh" }}>
-      <Box sx={{ mb: 4 }}>
-        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 1 }}>
-          <Link underline="hover" color="inherit" onClick={() => navigate("/dashboard")} sx={{ cursor: 'pointer', fontSize: 13 }}>
-            Dashboard
-          </Link>
-          <Typography color="text.primary" sx={{ fontWeight: 600, fontSize: 13 }}>Facturación</Typography>
-        </Breadcrumbs>
-        
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h4" sx={{ fontWeight: 900, color: "#2d3436" }}>Líneas de Pedido</Typography>
-=======
     <Box sx={styles.container}>
       <Box sx={{ mb: 5 }}>
         <Breadcrumbs separator={<NavigateNextIcon sx={{ fontSize: 14, opacity: 0.5 }} />} sx={{ mb: 1 }}>
@@ -212,37 +192,17 @@ export default function DetallePedidoPage(): JSX.Element {
             <Typography variant="h4" sx={{ fontWeight: 800, color: "#1e293b", letterSpacing: "-0.5px" }}>Detalles de Pedido</Typography>
             <Typography variant="body2" color="text.secondary">Gestiona las líneas de productos y facturación por orden.</Typography>
           </Box>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => { setMode("create"); setCurrent(null); setOpen(true); }}
-<<<<<<< HEAD
-            sx={{ bgcolor: "#F55345", "&:hover": { bgcolor: "#d44538" }, borderRadius: "12px", px: 3, textTransform: "none", fontWeight: 700 }}
-          >
-            Agregar Producto
-=======
             sx={styles.actionButton}
           >
             Nueva Línea
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
           </Button>
         </Stack>
       </Box>
 
-<<<<<<< HEAD
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card variant="outlined" sx={{ borderRadius: "16px", borderLeft: "6px solid #F55345", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
-            <CardContent>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Avatar sx={{ bgcolor: "rgba(245, 83, 69, 0.1)", color: "#F55345", width: 56, height: 56 }}>
-                  <ReceiptLongIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="overline" sx={{ fontWeight: 700, color: "text.secondary" }}>Registros</Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 800 }}>{items.length}</Typography>
-=======
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 6 }}>
           <Card variant="outlined" sx={{ ...styles.statCard, borderLeft: "6px solid #F55345" }}>
@@ -254,24 +214,12 @@ export default function DetallePedidoPage(): JSX.Element {
                 <Box>
                   <Typography variant="body2" sx={{ fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "1px" }}>Registros actuales</Typography>
                   <Typography variant="h4" sx={{ fontWeight: 800, color: "#1e293b" }}>{items.length}</Typography>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
                 </Box>
               </Stack>
             </CardContent>
           </Card>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-<<<<<<< HEAD
-          <Card variant="outlined" sx={{ borderRadius: "16px", borderLeft: "6px solid #4caf50", boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
-            <CardContent>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Avatar sx={{ bgcolor: "rgba(76, 175, 80, 0.1)", color: "#4caf50", width: 56, height: 56 }}>
-                  <PaidIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="overline" sx={{ fontWeight: 700, color: "text.secondary" }}>Venta Página</Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 800, color: "#2e7d32" }}>${totalVendido.toFixed(2)}</Typography>
-=======
           <Card variant="outlined" sx={{ ...styles.statCard, borderLeft: "6px solid #4caf50" }}>
             <CardContent sx={{ p: 3 }}>
               <Stack direction="row" spacing={3} alignItems="center">
@@ -281,7 +229,6 @@ export default function DetallePedidoPage(): JSX.Element {
                 <Box>
                   <Typography variant="body2" sx={{ fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", fontSize: "0.7rem", letterSpacing: "1px" }}>Total Ventas (Página)</Typography>
                   <Typography variant="h4" sx={{ fontWeight: 800, color: "#10b981" }}>${totalVendido.toLocaleString('en-US', { minimumFractionDigits: 2 })}</Typography>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
                 </Box>
               </Stack>
             </CardContent>
@@ -289,28 +236,6 @@ export default function DetallePedidoPage(): JSX.Element {
         </Grid>
       </Grid>
 
-<<<<<<< HEAD
-      <TextField
-        placeholder="Buscar por ID o producto..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        fullWidth
-        sx={{ mt: 3, "& .MuiOutlinedInput-root": { borderRadius: "12px", bgcolor: "white" } }}
-        InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon color="action" /></InputAdornment>) }}
-      />
-
-      {error && <Alert severity="error" sx={{ mt: 3, borderRadius: "12px" }}>{error}</Alert>}
-
-      <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: "16px", mt: 3, overflow: "hidden" }}>
-        <Table>
-          <TableHead sx={{ bgcolor: "#fcfcfc" }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 700 }}>ORDEN</TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>PRODUCTO</TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>CANT.</TableCell>
-              <TableCell sx={{ fontWeight: 700 }}>SUBTOTAL</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 700 }}>ACCIONES</TableCell>
-=======
       <Box sx={{ mb: 3 }}>
         <TextField
           placeholder="Busca por ID de pedido o nombre de producto..."
@@ -342,29 +267,11 @@ export default function DetallePedidoPage(): JSX.Element {
               <TableCell>Cantidad</TableCell>
               <TableCell>Subtotal</TableCell>
               <TableCell align="right">Acciones</TableCell>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               [...Array(5)].map((_, i) => (
-<<<<<<< HEAD
-                <TableRow key={i}><TableCell colSpan={5}><Skeleton height={45} /></TableCell></TableRow>
-              ))
-            ) : (
-              items.map((item) => (
-                <TableRow key={item.id} hover>
-                  <TableCell sx={{ fontWeight: 600 }}>#{item.pedidoId}</TableCell>
-                  <TableCell>{item.producto?.nombre || "—"}</TableCell>
-                  <TableCell color="text.secondary">{item.cantidad}</TableCell>
-                  <TableCell sx={{ fontWeight: 700, color: "#F55345" }}>
-                    ${(Number(item.subtotal) || 0).toFixed(2)}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                      <IconButton size="small" onClick={() => onEdit(item)} sx={{ color: "#4a5568" }}><EditIcon fontSize="small" /></IconButton>
-                      <IconButton size="small" onClick={() => { setToDelete(item); setConfirmOpen(true); }} sx={{ color: "#e53e3e" }}><DeleteIcon fontSize="small" /></IconButton>
-=======
                 <TableRow key={i}><TableCell colSpan={5}><Skeleton height={50} variant="text" sx={{ mx: 2 }} /></TableCell></TableRow>
               ))
             ) : items.length === 0 ? (
@@ -400,7 +307,6 @@ export default function DetallePedidoPage(): JSX.Element {
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -410,14 +316,6 @@ export default function DetallePedidoPage(): JSX.Element {
         </Table>
       </TableContainer>
 
-<<<<<<< HEAD
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-        <Pagination count={totalPages} page={page} onChange={(_, v) => setPage(v)} shape="rounded" sx={{ '& .Mui-selected': { bgcolor: '#F55345 !important', color: 'white' } }} />
-      </Box>
-
-      <DetallePedidoFormDialog open={open} mode={mode} initial={current} productos={productos} pedidos={pedidos} onClose={() => setOpen(false)} onSubmit={onSubmit} />
-      <ConfirmDialog open={confirmOpen} title="Eliminar registro" description={`¿Quitar este ítem de la orden?`} onCancel={() => setConfirmOpen(false)} onConfirm={confirmDelete} />
-=======
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Pagination 
           count={totalPages} 
@@ -434,7 +332,6 @@ export default function DetallePedidoPage(): JSX.Element {
 
       <DetallePedidoFormDialog open={open} mode={mode} initial={current} productos={productos} pedidos={pedidos} onClose={() => setOpen(false)} onSubmit={onSubmit} />
       <ConfirmDialog open={confirmOpen} title="Eliminar registro" description={`¿Estás seguro de quitar este producto de la orden?`} onCancel={() => setConfirmOpen(false)} onConfirm={confirmDelete} />
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     </Box>
   );
 }

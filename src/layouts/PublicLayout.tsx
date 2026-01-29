@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-import { Box, Container, Toolbar } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import PublicHeader from "../components/public/PublicHeader";
-import PublicFooter from "../components/public/PublicFooter";
-import type { JSX } from "react/jsx-runtime";
-=======
 import { Box, Container, Toolbar, alpha } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import PublicHeader from "../components/public/PublicHeader";
 import PublicFooter from "../components/public/PublicFooter";
 import ScrollToHash from "./ScrollToHash";
 import type { JSX } from "react";
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
 
 export default function PublicLayout(): JSX.Element {
   return (
@@ -20,22 +12,6 @@ export default function PublicLayout(): JSX.Element {
         display: "flex", 
         flexDirection: "column", 
         minHeight: "100vh", 
-<<<<<<< HEAD
-        bgcolor: "#f9f9f9" 
-      }}
-    >
-      <PublicHeader />
-
-      <Toolbar />
-
-      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
-        <Container maxWidth="lg">
-          <Outlet />
-        </Container>
-      </Box>
-
-      <PublicFooter />
-=======
         bgcolor: "#f4f6f8",
         overflowX: "hidden"
       }}
@@ -92,7 +68,6 @@ export default function PublicLayout(): JSX.Element {
       >
         <PublicFooter />
       </Box>
->>>>>>> 3a51e983ebe5b2b1f03b3189ce1ef8e51dfbc28e
     </Box>
   );
 }

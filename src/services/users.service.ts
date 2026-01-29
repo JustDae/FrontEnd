@@ -54,14 +54,14 @@ export const getUserImageUrl = (imageName?: string) => {
   if (!imageName) return undefined;
   if (imageName.startsWith('http')) return imageName;
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  return `${baseUrl}/profile/${imageName}`;
+  return `${baseUrl}/public/profile/${imageName}`;
 };
 
 export const uploadUserProfile = async (id: string, file: File) => {
   const formData = new FormData();
   formData.append("profile", file);
 
-  const { data } = await api.put(`/users/${id}/profile`, formData, {
+  const { data } = await api.put(`/users/${id}/public/profile`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

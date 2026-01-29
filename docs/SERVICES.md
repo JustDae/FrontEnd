@@ -1,4 +1,4 @@
-# 🔌 Guía de Servicios API
+# Guía de Servicios API
 
 Documentación detallada de los servicios que manejan la comunicación con el backend.
 

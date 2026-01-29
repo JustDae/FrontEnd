@@ -1,4 +1,4 @@
-# 🗺️ Guía de Enrutamiento
+# Guía de Enrutamiento
 
 Documentación detallada del sistema de enrutamiento de la aplicación.
 

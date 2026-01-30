@@ -23,6 +23,9 @@ jobs:
           printf "%s" "${{ secrets.REACT_ENV }}" > .env.production
 
       - name: Instalar dependencias
+        run: npm ci --include=optional
+
+      - name: Instalar dependencias
         run: npm ci
 
       - name: Compilar (Build)

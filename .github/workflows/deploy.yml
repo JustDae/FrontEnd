@@ -25,9 +25,6 @@ jobs:
       - name: Instalar dependencias
         run: npm ci --include=optional
 
-      - name: Instalar dependencias
-        run: npm ci
-
       - name: Compilar (Build)
         run: npm run build
 

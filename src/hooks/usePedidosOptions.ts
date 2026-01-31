@@ -10,7 +10,13 @@ export function usePedidosOptions() {
       try {
         setLoading(true);
         const res = await getPedidos({ page: 1, limit: 100 });
-        setOptions(res.items);
+
+        const lista = res.data?.items || res.data || [];
+        setOptions(Array.isArray(lista) ? lista : []);
+
+      } catch (err) {
+        console.error("Error cargando opciones de pedidos", err);
+        setOptions([]);
       } finally {
         setLoading(false);
       }

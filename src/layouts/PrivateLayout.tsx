@@ -49,12 +49,15 @@ const navItems: NavItem[] = [
   { label: "Categorías", to: "/dashboard/categories", icon: <CategoryRoundedIcon />, roles: ["ADMIN"] },
   { label: "Catálogo de Productos", to: "/dashboard/productos", icon: <FastfoodRoundedIcon /> },
   { label: "Gestión de Pedidos", to: "/dashboard/pedidos", icon: <ListAltRoundedIcon /> },
+  { label: "Detalle Pedido", to: "/dashboard/detalle-pedido", icon: <ReceiptLongRoundedIcon />, roles: ["ADMIN"] },
+  { label: "Metodo Pago", to: "/dashboard/metodo-pago", icon: <ReceiptLongRoundedIcon />, roles: ["ADMIN"] },
   { label: "Auditoría de Sistema", to: "/dashboard/audit-logs", icon: <HistoryRoundedIcon /> },
   { label: "Usuarios", to: "/dashboard/users", icon: <GroupRoundedIcon />, roles: ["ADMIN"] },
   { label: "Roles y Permisos", to: "/dashboard/roles", icon: <SecurityRoundedIcon />, roles: ["ADMIN"] },
   { label: "Mi Restaurante", to: "/dashboard/restaurante", icon: <StoreRoundedIcon />, roles: ["ADMIN"] },
   { label: "Promociones", to: "/dashboard/promociones", icon: <LocalOfferRoundedIcon />, roles: ["ADMIN"] },
   { label: "Facturación", to: "/dashboard/facturas", icon: <ReceiptLongRoundedIcon />, roles: ["ADMIN"] },
+  { label: "Mesa", to: "/dashboard/mesa", icon: <ReceiptLongRoundedIcon />, roles: ["ADMIN"] },
 ];
 
 export default function PrivateLayout(): JSX.Element {

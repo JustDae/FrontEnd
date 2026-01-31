@@ -22,7 +22,7 @@ type Props = {
   pedidos: any[];
   onClose: () => void;
   onSubmit: (payload: { 
-    pedidoId: number; 
+    pedidoId: string;
     productoId: number; 
     cantidad: number; 
     observaciones?: string 
@@ -55,7 +55,7 @@ export default function DetallePedidoFormDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      pedidoId: Number(pedidoId),
+      pedidoId: String(pedidoId),
       productoId: Number(productoId),
       cantidad: Number(cantidad),
       observaciones: observaciones.trim() || undefined,

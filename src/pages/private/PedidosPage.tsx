@@ -66,34 +66,39 @@ export default function PedidosPage(): JSX.Element {
   }, [pedidos]);
 
   const handleCrearPedido = async () => {
-    if (!nombreCliente.trim()) {
-      notify({ message: "El nombre del cliente es obligatorio", severity: "warning" });
-      return;
-    }
+  if (!nombreCliente.trim()) {
+    notify({ message: "El nombre del cliente es obligatorio", severity: "warning" });
+    return;
+  }
 
-    try {
-      const nuevoPedido = await createPedido({ 
-        nombre_cliente: nombreCliente,
-        direccion: "Local",
-        telefono: "0999999999",
-        correo: "cliente@restaurante.com",
-        estado: "PENDIENTE",
-        fecha_pedido: new Date().toISOString(),
-        mesaId: 1,
-        metodoPagoId: 1
-      });
+  const searchParams = new URLSearchParams(window.location.search);
+  const mesaIdParam = searchParams.get("mesaId");
 
-      notify({ message: "Pedido creado con éxito", severity: "success" });
-      setOpenModal(false);
-      setNombreCliente("");
-      
-      if (nuevoPedido.data?.id) {
-        navigate(`/dashboard/detalle-pedido/${nuevoPedido.data.id}`);
-      }
-    } catch (error) {
-      notify({ message: "Error al crear el pedido", severity: "error" });
+  try {
+    const nuevoPedido = await createPedido({
+      nombre_cliente: nombreCliente,
+      direccion: "Local",
+      telefono: "0999999999",
+      correo: "cliente@restaurante.com",
+      estado: "PENDIENTE",
+      fecha_pedido: new Date().toISOString(),
+      mesaId: mesaIdParam ? parseInt(mesaIdParam) : 7,
+      metodoPagoId: 1
+    });
+
+    notify({ message: `Pedido para ${nombreCliente} creado con éxito`, severity: "success" });
+    setOpenModal(false);
+    setNombreCliente("");
+
+    if (nuevoPedido.data?.id) {
+      navigate(`/dashboard/detalle-pedido/${nuevoPedido.data.id}`);
     }
-  };
+  } catch (error: any) {
+    console.error("Error al crear pedido:", error);
+    const msg = error.response?.data?.message || "Error de conexión con el servidor";
+    notify({ message: msg, severity: "error" });
+  }
+};
 
   return (
     <Box sx={styles.container}>

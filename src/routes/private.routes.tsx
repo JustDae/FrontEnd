@@ -12,7 +12,9 @@ import AuditLogsPage from "../pages/private/AuditLogsPage";
 import RolesPage from "../pages/private/RolesPage";
 import RestaurantePage from "../pages/private/RestaurantePage";
 import PromocionesPage from "../pages/private/PromocionesPage";
-import FacturaPage from "../pages/private/FacturaPage.tsx";
+import FacturaPage from "../pages/private/FacturaPage";
+import MesaPage from "../pages/private/MesaPage";
+import MetodoPagoPage from "../pages/private/MetodoPagoPage";
 
 export const privateRoutes: RouteObject = {
   path: "/dashboard",
@@ -69,6 +71,22 @@ export const privateRoutes: RouteObject = {
       element: (
         <RequireRole allow={["ADMIN"]}>
           <CategoriesPage />
+        </RequireRole>
+      ),
+    },
+    {
+      path: "mesa",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <MesaPage />
+        </RequireRole>
+        ),
+    },
+    {
+      path: "metodo-pago",
+      element: (
+        <RequireRole allow={["ADMIN"]}>
+          <MetodoPagoPage />
         </RequireRole>
       ),
     },

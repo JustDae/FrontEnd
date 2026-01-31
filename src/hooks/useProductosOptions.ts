@@ -10,7 +10,13 @@ export function useProductosOptions() {
       try {
         setLoading(true);
         const res = await api.get("/productos");
-        setOptions(res.data.items || res.data);
+
+        const lista = res.data?.data?.items || res.data?.data || [];
+        setOptions(Array.isArray(lista) ? lista : []);
+
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+        setOptions([]);
       } finally {
         setLoading(false);
       }

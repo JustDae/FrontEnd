@@ -6,7 +6,7 @@ export interface DetallePedido {
   precio_unitario: number;
   subtotal: number;
   observaciones?: string;
-  pedidoId: number;
+  pedidoId: string;
   productoId: number;
   producto?: {
     id: number;
@@ -16,7 +16,7 @@ export interface DetallePedido {
 }
 
 export interface CreateDetallePedidoDto {
-  pedidoId: number;
+  pedidoId: string;
   productoId: number;
   cantidad: number;
   observaciones?: string;
